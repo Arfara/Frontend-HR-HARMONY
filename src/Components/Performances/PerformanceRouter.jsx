@@ -43,9 +43,9 @@ const PerformanceRouter = () => {
               <Route path="performance-appraisal" element={< PerformanceAppraisal />} />
               <Route path="track-goals" element={< TrackGoals />} />
               <Route path="goal-type" element={< GoalType />} />
-              <Route path='indicator-details' element = {<IndicatorDetails/>}/>
-              <Route path='appraisal-details' element = {<AppraisalDetails/>}/>
-              <Route path='goals-details' element = {<GoalsDetails/>}/>
+              <Route path='indicator-details/:id' element = {<IndicatorDetails/>}/>
+              <Route path='appraisal-details/:id' element = {<AppraisalDetails/>}/>
+              <Route path='goals-details/:id' element = {<GoalsDetails/>}/>
           </Routes>
 
         </div>
