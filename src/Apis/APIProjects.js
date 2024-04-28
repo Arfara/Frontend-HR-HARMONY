@@ -9,18 +9,9 @@ export const APIProjects = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      if (result.data.code === 200) {
-        toast.success(result.data.message);
-      } else {
-        toast.error("Gagal mengambil data projects.");
-      }
       return result.data;
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Terjadi kesalahan jaringan atau server.");
-      }
+      toast.error("Failed to fetch projects.");
       throw new Error(error);
     }
   },
