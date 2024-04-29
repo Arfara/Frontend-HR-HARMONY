@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APICoreHR } from '@/Apis/APICoreHR';
-import { toast } from 'react-toastify';
 
 const Policies = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,7 +22,7 @@ const Policies = () => {
         const data = await APICoreHR.getAllPolicies();
         setPolicies(data.policies || []);
       } catch (error) {
-        toast.error("Failed to fetch policies.");
+
       }
       setIsLoading(false);
     };
@@ -39,13 +38,12 @@ const Policies = () => {
     };
     try {
       await APICoreHR.createPolicy(policyData);
-      toast.success("Policy created successfully");
       setPolicyTitle('');
       setPolicyDescription('');
       const updatedPolicies = await APICoreHR.getAllPolicies();
       setPolicies(updatedPolicies.policies || []);
     } catch (error) {
-      toast.error("Failed to create policy.");
+
     }
     setIsLoading(false);
   };
@@ -65,12 +63,11 @@ const Policies = () => {
     if (selectedPolicyId) {
       try {
         await APICoreHR.deletePolicyById(selectedPolicyId);
-        toast.success("Policy deleted successfully");
         const updatedPolicies = await APICoreHR.getAllPolicies();
         setPolicies(updatedPolicies.policies || []);
         setShowDeleteConfirmation(false);
       } catch (error) {
-        toast.error("Failed to delete policy.");
+
       }
     }
     setIsLoading(false);
@@ -84,12 +81,11 @@ const Policies = () => {
     };
     try {
       await APICoreHR.updatePolicyById(currentEdit.id, updatedPolicyData);
-      toast.success("Policy updated successfully");
       setIsEditModalOpen(false);
       const updatedPolicies = await APICoreHR.getAllPolicies();
       setPolicies(updatedPolicies.policies || []);
     } catch (error) {
-      toast.error("Failed to update policy.");
+
     }
   };
 

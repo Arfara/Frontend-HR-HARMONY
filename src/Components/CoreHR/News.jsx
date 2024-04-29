@@ -4,7 +4,6 @@ import 'react-quill/dist/quill.snow.css';
 import { PencilAltIcon, TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { APICoreHR } from '@/Apis/APICoreHR';
-import { toast } from 'react-toastify';
 
 const News = () => {
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ const News = () => {
       const response = await APICoreHR.getAllAnnouncements();
       setNewsData(response.announcements || []);
     } catch (error) {
-      toast.error("Failed to fetch news data.");
+
     }
     setIsLoading(false);
   };
@@ -51,7 +50,7 @@ const News = () => {
         const response = await APICoreHR.getAllDepartments();
         setDepartments(response.departments || []);
       } catch (error) {
-        toast.error("Failed to fetch department data.");
+
       }
     };
 
@@ -137,7 +136,7 @@ const News = () => {
       });
       fetchData();
     } catch (error) {
-      toast.error("Failed to save announcement.");
+
     }
   };
 
@@ -148,23 +147,29 @@ const News = () => {
         setShowDeleteConfirmation(false);
         fetchData();
       } catch (error) {
-        toast.error("Failed to delete announcement.");
+
       }
     }
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    
     if (!selectedAnnouncementId) {
-      toast.error("Invalid announcement ID.");
       return;
     }
+
+    const updatedData = {
+      ...editData,
+      department_id: parseInt(editData.department_id, 10)
+    };
+
     try {
-      await APICoreHR.updateAnnouncement(selectedAnnouncementId, editData);
+      const response = await APICoreHR.updateAnnouncement(selectedAnnouncementId, updatedData);
       setIsEditModalOpen(false);
       fetchData();
     } catch (error) {
-      toast.error("Failed to update announcement.");
+
     }
   };
 
@@ -358,7 +363,7 @@ const News = () => {
                   value={editData.department_id} 
                   onChange={handleChange}
                 >
-                  <option value="" disabled selected>Select Department</option> {/* Baris ini ditambahkan */}
+                  <option value="" disabled selected>Select Department</option>
                   {departments.map((department) => (
                     <option key={department.id} value={department.id}>
                       {department.department_name}
