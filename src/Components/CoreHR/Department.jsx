@@ -3,7 +3,6 @@ import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const Department = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -24,7 +23,7 @@ const Department = () => {
         const data = await APICoreHR.getAllDepartments();
         setDepartments(data.departments || []);
       } catch (error) {
-        toast.error("Failed to fetch departments.");
+
       }
       setIsLoading(false);
     };
@@ -37,7 +36,7 @@ const Department = () => {
         const employeesData = await APIEmployees.getAllEmployees();
         setEmployees(employeesData.employees || []);
       } catch (error) {
-        toast.error("Failed to fetch employees.");
+
       }
     };
     fetchEmployees();
@@ -53,9 +52,8 @@ const Department = () => {
       setDepartments(updatedDepartments.departments || []);
       setDepartmentName('');
       setSelectedEmployeeId('');
-      toast.success("Department added successfully");
     } catch (error) {
-      toast.error("Failed to add department.");
+
     }
     setIsLoading(false);
   };
@@ -81,9 +79,8 @@ const Department = () => {
         const updatedDepartments = await APICoreHR.getAllDepartments();
         setDepartments(updatedDepartments.departments || []);
         setShowDeleteConfirmation(false);
-        toast.success("Department deleted successfully");
       } catch (error) {
-        toast.error("Failed to delete department.");
+
       }
     }
   };
@@ -95,10 +92,9 @@ const Department = () => {
       await APICoreHR.updateDepartment(currentEdit.id, { department_name: currentEdit.name, employee_id: parseInt(currentEdit.head, 10) });
       const updatedDepartments = await APICoreHR.getAllDepartments();
       setDepartments(updatedDepartments.departments || []);
-      toast.success("Department updated successfully");
       setIsEditModalOpen(false);
     } catch (error) {
-      toast.error("Failed to update department.");
+
     }
     setIsLoading(false);
   };
@@ -106,7 +102,6 @@ const Department = () => {
   return (
     <div className="max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
-        {/* Card untuk menambahkan department baru */}
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
@@ -131,7 +126,6 @@ const Department = () => {
           </div>
         </div>
 
-        {/* Card untuk menampilkan semua departments */}
         <div className="w-full lg:w-2/3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">

@@ -13,7 +13,7 @@ export const APICoreHR = {
       toast.success("Department created successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menambahkan department.");
+      toast.error("Error while creating department.");
       throw new Error(error);
     }
   },
@@ -54,7 +54,7 @@ export const APICoreHR = {
       toast.success("Department updated successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat mengedit department.");
+      toast.error("Error while updating department.");
       throw new Error(error);
     }
   },
@@ -69,7 +69,7 @@ export const APICoreHR = {
       toast.success("Department deleted successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus department.");
+      toast.error("Error while deleting department.");
       throw new Error(error);
     }
   },
@@ -84,7 +84,7 @@ export const APICoreHR = {
       toast.success("Designation created successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menambahkan designation.");
+      toast.error("Error while creating designation.");
       throw new Error(error);
     }
   },
@@ -112,7 +112,7 @@ export const APICoreHR = {
       toast.success("Designation updated successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat mengedit designation.");
+      toast.error("Error while updating designation.");
       throw new Error(error);
     }
   },
@@ -127,7 +127,7 @@ export const APICoreHR = {
       toast.success("Designation deleted successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus designation.");
+      toast.error("Error while deleting designation.");
       throw new Error(error);
     }
   },
@@ -142,7 +142,7 @@ export const APICoreHR = {
       toast.success("Policy created successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menambahkan policy.");
+      toast.error("Error while creating policy.");
       throw new Error(error);
     }
   },
@@ -183,7 +183,7 @@ export const APICoreHR = {
       toast.success("Policy updated successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat mengedit policy.");
+      toast.error("Error while updating policy.");
       throw new Error(error);
     }
   },
@@ -198,7 +198,7 @@ export const APICoreHR = {
       toast.success("Policy deleted successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus policy.");
+      toast.error("Error while deleting policy.");
       throw new Error(error);
     }
   },
@@ -213,7 +213,7 @@ export const APICoreHR = {
       toast.success("Announcement created successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menambahkan announcement.");
+      toast.error("Error while creating announcement.");
       throw new Error(error);
     }
   },
@@ -254,7 +254,7 @@ export const APICoreHR = {
       toast.success("Announcement updated successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat mengedit announcement.");
+      toast.error("Error while updating announcement.");
       throw new Error(error);
     }
   },
@@ -269,7 +269,7 @@ export const APICoreHR = {
       toast.success("Announcement deleted successfully");
       return result.data;
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus announcement.");
+      toast.error("Error while deleting announcement.");
       throw new Error(error);
     }
   },

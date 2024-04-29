@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
-import { toast } from 'react-toastify';
 import { APICoreHR } from '@/Apis/APICoreHR';
 
 const Designation = () => {
@@ -21,7 +20,7 @@ const Designation = () => {
         const data = await APICoreHR.getAllDesignations();
         setDesignations(data.designations || []);
       } catch (error) {
-        toast.error("Failed to fetch designations.");
+
       }
       setIsLoading(false);
     };
@@ -35,7 +34,7 @@ const Designation = () => {
         const data = await APICoreHR.getAllDepartments();
         setDepartments(data.departments || []);
       } catch (error) {
-        toast.error("Failed to fetch departments.");
+
       }
       setIsLoading(false);
     };
@@ -60,9 +59,8 @@ const Designation = () => {
         setShowDeleteConfirmation(false);
         const data = await APICoreHR.getAllDesignations();
         setDesignations(data.designations || []);
-        toast.success("Designation deleted successfully");
       } catch (error) {
-        toast.error("Failed to delete designation.");
+
       }
       setIsLoading(false);
     }
@@ -78,19 +76,19 @@ const Designation = () => {
     };
     try {
       await APICoreHR.createDesignation(designationData);
-      toast.success("Designation created successfully");
       const data = await APICoreHR.getAllDesignations();
       setDesignations(data.designations || []);
       setIsLoading(false);
       event.target.reset();
       document.getElementById('designationDepartment').value = "";
     } catch (error) {
-      toast.error("Failed to create designation.");
       setIsLoading(false);
     }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
     if (currentEdit && currentEdit.id) {
       setIsLoading(true);
       try {
@@ -98,11 +96,12 @@ const Designation = () => {
         setIsEditModalOpen(false);
         const data = await APICoreHR.getAllDesignations();
         setDesignations(data.designations || []);
-        toast.success("Designation updated successfully");
       } catch (error) {
-        toast.error("Failed to update designation.");
+
       }
       setIsLoading(false);
+    } else {
+      setIsEditModalOpen(false);
     }
   };
 
@@ -231,7 +230,7 @@ const Designation = () => {
             <form onSubmit={handleUpdate}>
               <div className="mb-3">
                 <label htmlFor="editDesignationDepartment" className="block text-sm font-medium text-gray-700">Department *</label>
-                <select id="editDesignationDepartment" value={currentEdit.department_id} onChange={(e) => setCurrentEdit({ ...currentEdit, department_id: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <select id="editDesignationDepartment" value={currentEdit.department_id} onChange={(e) => setCurrentEdit({ ...currentEdit, department_id: parseInt(e.target.value) })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                   <option value="">Select Department</option>
                   {departments.map((department) => (
                     <option key={department.id} value={department.id}>{department.department_name}</option>
