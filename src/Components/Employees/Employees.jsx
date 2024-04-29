@@ -3,7 +3,6 @@ import { TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APICoreHR } from '@/Apis/APICoreHR';
-import { toast } from 'react-toastify';
 
 const Employees = () => {
   const navigate = useNavigate();
@@ -38,8 +37,7 @@ const Employees = () => {
       const response = await APIEmployees.getAllEmployees();
       setEmployees(response.employees || []);
     } catch (error) {
-      toast.error('Failed to fetch employees. Please try again.');
-      setEmployees([]);
+
     } finally {
       setIsLoading(false);
     }
@@ -50,8 +48,7 @@ const Employees = () => {
       const response = await APIEmployees.getRoles();
       setRoles(response.roles || []);
     } catch (error) {
-      toast.error('Failed to fetch roles. Please try again.');
-      setRoles([]);
+
     }
   };
 
@@ -60,8 +57,7 @@ const Employees = () => {
       const response = await APIEmployees.getOfficeShifts();
       setOfficeShifts(response.shifts || []);
     } catch (error) {
-      toast.error('Failed to fetch office shifts. Please try again.');
-      setOfficeShifts([]);
+      
     }
   };
 
@@ -70,8 +66,7 @@ const Employees = () => {
       const response = await APICoreHR.getAllDepartments();
       setDepartments(response.departments || []);
     } catch (error) {
-      toast.error('Failed to fetch departments. Please try again.');
-      setDepartments([]);
+      
     }
   };
 
@@ -80,8 +75,7 @@ const Employees = () => {
       const response = await APICoreHR.getAllDesignations();
       setDesignations(response.designations || []);
     } catch (error) {
-      toast.error('Failed to fetch designations. Please try again.');
-      setDesignations([]);
+      
     }
   };
 
@@ -113,7 +107,7 @@ const Employees = () => {
         fetchEmployees();
         handleHideDeleteConfirmation();
       } catch (error) {
-        toast.error('Failed to delete employee. Please try again.');
+
       }
     }
   };
@@ -218,29 +212,28 @@ const Employees = () => {
             <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 px-4 py-2">
-            {/* Form fields */}
-            <div className="mb-4 md:col-span-1 lg:col-span-1"> {/* First Name */}
+            <div className="mb-4 md:col-span-1 lg:col-span-1">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="first_name">
                 First Name *
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="first_name" type="text" placeholder="First Name" />
             </div>
-            <div className="mb-4 md:col-span-1 lg:col-span-1"> {/* Last Name */}
+            <div className="mb-4 md:col-span-1 lg:col-span-1">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="last_name">
                 Last Name *
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="last_name" type="text" placeholder="Last Name" />
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Contact Number and Gender */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-4">
-                <div> {/* Contact Number */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_number">
                     Contact Number *
                   </label>
                   <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact_number" type="text" placeholder="Contact Number" onChange={(e) => validateContactNumber(e.target.value)} />
                   {contactNumberError && <p className="text-red-500 text-xs italic">{contactNumberError}</p>}
                 </div>
-                <div> {/* Gender */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
                     Gender
                   </label>
@@ -252,16 +245,16 @@ const Employees = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Email and Username */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-4">
-                <div> {/* Email */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email *
                   </label>
                   <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" onChange={(e) => validateEmail(e.target.value)} />
                   {emailError && <p className="text-red-500 text-xs italic">{emailError}</p>}
                 </div>
-                <div> {/* Username */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                     Username *
                   </label>
@@ -270,16 +263,16 @@ const Employees = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 md:col-span-1 lg:col-span-1"> {/* Password */}
+            <div className="mb-4 md:col-span-1 lg:col-span-1">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                 Password *
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password" onChange={(e) => validatePassword(e.target.value)} />
               {passwordError && <p className="text-red-500 text-xs italic">{passwordError}</p>}
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Office Shift and Role */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-4">
-                <div> {/* Office Shift */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="office_shift">
                     Office Shift *
                   </label>
@@ -289,7 +282,7 @@ const Employees = () => {
                     ))}
                   </select>
                 </div>
-                <div> {/* Role */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
                     Role *
                   </label>
@@ -301,9 +294,9 @@ const Employees = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Department and Designation */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-4">
-                <div> {/* Department */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="department">
                     Department *
                   </label>
@@ -313,7 +306,7 @@ const Employees = () => {
                     ))}
                   </select>
                 </div>
-                <div> {/* Designation */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="designation">
                     Designation *
                   </label>
@@ -325,23 +318,23 @@ const Employees = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Basic Salary, Hourly Rate, and Payslip Type */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-3 gap-4">
-                <div> {/* Basic Salary */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="basic_salary">
                     Basic Salary *
                   </label>
                   <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="basic_salary" type="text" placeholder="Basic Salary" onChange={(e) => validateBasicSalary(e.target.value)} />
                   {basicSalaryError && <p className="text-red-500 text-xs italic">{basicSalaryError}</p>}
                 </div>
-                <div> {/* Hourly Rate */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hourly_rate">
                     Hourly Rate
                   </label>
                   <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="hourly_rate" type="text" placeholder="Hourly Rate" onChange={(e) => validateHourlyRate(e.target.value)} />
                   {hourlyRateError && <p className="text-red-500 text-xs italic">{hourlyRateError}</p>}
                 </div>
-                <div> {/* Payslip Type */}
+                <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payslip_type">
                     Payslip Type
                   </label>
@@ -349,7 +342,7 @@ const Employees = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Profile Picture */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
                 Profile Picture
               </label>

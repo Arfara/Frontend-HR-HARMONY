@@ -496,7 +496,7 @@ const ShiftScheduling = () => {
               </div>
               <div className="items-center px-4 py-3">
                 <button id="delete-close" className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={handleHideDeleteConfirmation}>Close</button>
-                <button id="delete-confirm" className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={handleDelete}>Confirm</button>
+                <button id="delete-confirm" className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={() => handleDelete(selectedShiftId)}>Confirm</button>
               </div>
             </div>
           </div>

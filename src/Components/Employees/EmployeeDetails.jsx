@@ -213,9 +213,7 @@ const ClientDetails = () => {
                 return <div className="w-full lg:w-3/4">
                     <div className="bg-white p-6 rounded shadow">
                       <div className="mb-6">
-                        {/* Contract option header */}
                         <h2 className="text-xl font-semibold text-gray-800 mb-2">Personal Information</h2>
-                        {/* Tabs */}
                         <ul className="flex border-b">
                           <li className="-mb-px mr-1">
                             <a
