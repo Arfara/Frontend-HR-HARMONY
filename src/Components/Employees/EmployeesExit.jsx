@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const EmployeesExit = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -22,7 +21,7 @@ const EmployeesExit = () => {
       const response = await APIEmployees.getAllEmployeeExits();
       setExitEmployees(response.exit_employees || []);
     } catch (error) {
-      toast.error("Gagal memuat data exit employee.");
+
     }
   };
 
@@ -87,7 +86,7 @@ const EmployeesExit = () => {
       fetchExitEmployees(); 
       setShowDeleteConfirmation(false);
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus exit employee.");
+
     }
     setIsLoading(false);
   };
@@ -117,11 +116,10 @@ const EmployeesExit = () => {
 
     try {
       await APIEmployees.createEmployeeExit(exitEmployeesId, exitData);
-      toast.success("Employee exit processed successfully");
       setShowAddForm(false);
       fetchExitEmployees(); 
     } catch (error) {
-      toast.error("Terjadi kesalahan saat memproses exit employee.");
+
     }
     setIsLoading(false);
   };
