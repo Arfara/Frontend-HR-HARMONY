@@ -8,7 +8,6 @@ const MonthlyReport = () => {
         <label htmlFor="employee" className="block text-sm text-gray-800 mb-1">Employee</label>
         <select id="employee" className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
           <option value="">Fakhrity Hikmawan</option>
-          {/* Add more employee options here */}
         </select>
       </div>
       <div className="flex-grow mr-5 last:mr-0">

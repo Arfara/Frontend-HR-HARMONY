@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const OvertimeRequest = () => {
   const [visibleDelete, setVisibleDelete] = useState(null);
@@ -25,7 +24,6 @@ const OvertimeRequest = () => {
       setOvertimeRequests(response.data || []);
       setIsLoading(false);
     } catch (error) {
-      toast.error("Failed to load overtime requests.");
       setIsLoading(false);
     }
   };
@@ -39,7 +37,6 @@ const OvertimeRequest = () => {
           setEmployees(response.employees || []);
           setIsLoading(false);
         } else {
-          toast.error("Failed to load employees.");
           setIsLoading(false);
         }
       } catch (error) {
@@ -82,12 +79,10 @@ const OvertimeRequest = () => {
     if (deleteRequestId) {
       try {
         await APIAttendance.deleteOvertimeRequest(deleteRequestId);
-        toast.success("Overtime request deleted successfully.");
         setShowDeleteConfirmation(false);
         fetchOvertimeRequests();
         setIsLoading(false);
       } catch (error) {
-        toast.error("Failed to delete overtime request.");
         setIsLoading(false);
       }
     }
@@ -105,9 +100,8 @@ const OvertimeRequest = () => {
       });
       setShowModal(false);
       fetchOvertimeRequests();
-      toast.success("Overtime request added successfully.");
     } catch (error) {
-      toast.error("Failed to add overtime request.");
+
     }
   };
 
@@ -120,12 +114,10 @@ const OvertimeRequest = () => {
           ...selectedRequest,
           employee_id: parseInt(selectedRequest.employee_id, 10)
         });
-        toast.success("Overtime request updated successfully.");
         setShowEditModal(false);
         fetchOvertimeRequests();
         setIsLoading(false);
       } catch (error) {
-        toast.error("Failed to update overtime request.");
         setIsLoading(false);
       }
     }
@@ -256,7 +248,6 @@ const OvertimeRequest = () => {
                 <p className="text-sm text-gray-500">
                   We need below required information to add this record.
                 </p>
-                {/* Form fields */}
                 <form className="mt-4" onSubmit={handleSubmit} ref={formRef}>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee">
@@ -363,7 +354,6 @@ const OvertimeRequest = () => {
                   <p className="text-sm text-gray-500">
                     Update the required information for this record.
                   </p>
-                  {/* Form fields */}
                   <form className="mt-4" onSubmit={handleUpdateSubmit}>
                     <div className="mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee">
