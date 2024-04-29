@@ -36,8 +36,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Updated payroll status successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update payroll status');
       throw new Error(error);
     }
   },
@@ -49,8 +51,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary created successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to create advance salary');
       throw new Error(error);
     }
   },
@@ -88,8 +92,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary updated successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update advance salary');
       throw new Error(error);
     }
   },
@@ -101,8 +107,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary deleted successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to delete advance salary');
       throw new Error(error);
     }
   },
@@ -114,8 +122,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan created successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to create request loan');
       throw new Error(error);
     }
   },
@@ -153,8 +163,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan updated successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update request loan');
       throw new Error(error);
     }
   },
@@ -166,8 +178,10 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan deleted successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to delete request loan');
       throw new Error(error);
     }
   }

@@ -20,7 +20,7 @@ const PayrollList = () => {
       const payrollsData = await APIPayroll.getAllPayrolls();
       setPayrolls(payrollsData.payroll_info || []);
     } catch (error) {
-      toast.error('Error fetching payrolls data');
+
     }
     setIsLoading(false);
   };
@@ -31,7 +31,7 @@ const PayrollList = () => {
         const employeesData = await APIEmployees.getAllEmployees();
         setEmployees(employeesData.employees || []);
       } catch (error) {
-        toast.error('Error fetching employees data');
+
       }
     };
 

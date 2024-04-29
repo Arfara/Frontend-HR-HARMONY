@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 import { APIPayroll } from '@/Apis/APIPayroll';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const PayslipHistory = () => {
   const navigate = useNavigate();
@@ -19,7 +18,6 @@ const PayslipHistory = () => {
         const payrollData = await APIPayroll.getPayrollHistory();
         setPayrollHistory(payrollData.payroll_info_list);
       } catch (error) {
-        toast.error('Failed to fetch payroll history data.');
       } finally {
         setIsLoading(false);
       }
@@ -30,7 +28,7 @@ const PayslipHistory = () => {
         const employeesData = await APIEmployees.getAllEmployees();
         setEmployees(employeesData.employees);
       } catch (error) {
-        toast.error('Failed to fetch employees data.');
+
       }
     };
 

@@ -3,7 +3,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { APIPayroll } from '@/Apis/APIPayroll';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const RequestLoan = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -28,7 +27,7 @@ const RequestLoan = () => {
       const response = await APIEmployees.getAllEmployees();
       setEmployees(response.employees || []);
     } catch (error) {
-      toast.error("Failed to load employees.");
+
     }
   };
 
@@ -39,7 +38,6 @@ const RequestLoan = () => {
       setRequestLoans(response.data || []);
       setIsLoading(false);
     } catch (error) {
-      toast.error("Failed to load request loans.");
       setIsLoading(false);
     }
   };
@@ -81,10 +79,9 @@ const RequestLoan = () => {
       await APIPayroll.deleteRequestLoanById(deleteRequestLoanId);
       setRequestLoans(requestLoans.filter(record => record.id !== deleteRequestLoanId));
       setShowDeleteConfirmation(false);
-      toast.success("Request loan deleted successfully");
       fetchRequestLoans();
     } catch (error) {
-      toast.error("Failed to delete request loan.");
+
     }
   };
 
@@ -103,12 +100,11 @@ const RequestLoan = () => {
 
     try {
       await APIPayroll.createRequestLoan(data);
-      toast.success("Request loan created successfully");
       setShowAddForm(false);
       event.target.reset();
       fetchRequestLoans();
     } catch (error) {
-      toast.error("Failed to create request loan.");
+
     }
   };
 
@@ -127,11 +123,10 @@ const RequestLoan = () => {
 
     try {
       await APIPayroll.updateRequestLoanById(editData.id, updatedData);
-      toast.success("Request loan updated successfully");
       setShowEditPopup(false);
       fetchRequestLoans();
     } catch (error) {
-      toast.error("Failed to update request loan.");
+
     }
   };
 
