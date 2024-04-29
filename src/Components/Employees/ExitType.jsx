@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const ExitType = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -25,7 +24,7 @@ const ExitType = () => {
         }));
         setExitTypes(formattedData || []);
       } catch (error) {
-        toast.error("Terjadi kesalahan saat mengambil data exit type.");
+
       }
       setIsLoading(false);
     };
@@ -46,7 +45,7 @@ const ExitType = () => {
         setExitTypes(updatedExitTypes || []);
         setIsEditModalOpen(false);
       } catch (error) {
-        toast.error("Terjadi kesalahan saat mengupdate exit type.");
+
       }
     }
   };
@@ -62,7 +61,7 @@ const ExitType = () => {
       setExitTypes(exitTypes.filter(et => et.id !== selectedExitTypeId) || []);
       setShowDeleteConfirmation(false);
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus exit type.");
+
     }
   };
 
@@ -77,14 +76,13 @@ const ExitType = () => {
       setExitTypes([...exitTypes, formattedExit] || []);
       document.getElementById('exitType').value = '';
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menambahkan exit type.");
+
     }
   };
 
   return (
     <div className="mx-5 max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
-        {/* Card untuk menambahkan tipe exit baru */}
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
@@ -100,7 +98,6 @@ const ExitType = () => {
           </div>
         </div>
 
-        {/* Card untuk menampilkan semua tipe exit */}
         <div className="w-full lg:w-2/3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
