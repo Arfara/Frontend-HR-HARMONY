@@ -5,7 +5,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const initialNewAttendanceState = {
   employee_id: '',
@@ -38,7 +37,7 @@ const ManualAttendances = () => {
       setEmployees(employeesData.employees || []);
       setFilteredAttendances(attendancesData.data || []);
     } catch (error) {
-      toast.error('Failed to fetch data');
+
     }
     setIsLoading(false);
   };
@@ -83,10 +82,9 @@ const ManualAttendances = () => {
         setIsAddModalOpen(false);
         setNewAttendance(initialNewAttendanceState);
         fetchAttendancesAndEmployees();
-        toast.success("Attendance record added successfully");
       }
     } catch (error) {
-      toast.error('Failed to create attendance record');
+
     }
     setIsLoading(false);
   };
@@ -105,15 +103,16 @@ const ManualAttendances = () => {
       employee_id: parseInt(currentEdit.employee_id, 10),
     };
   
+    console.log(dataToUpdate);
+    
     try {
       const response = await APIAttendance.updateAttendance(dataToUpdate.id, dataToUpdate);
       if (response.code === 200) {
-        toast.success("Attendance record updated successfully");
         setIsEditModalOpen(false);
         fetchAttendancesAndEmployees();
       }
     } catch (error) {
-      toast.error("Failed to update attendance record");
+
     }
     setIsLoading(false);
   };
@@ -124,9 +123,8 @@ const ManualAttendances = () => {
       await APIAttendance.deleteAttendance(selectedAttendanceId);
       setShowDeleteConfirmation(false);
       fetchAttendancesAndEmployees();
-      toast.success("Attendance record deleted successfully");
     } catch (error) {
-      toast.error("Failed to delete attendance record.");
+
     }
     setIsLoading(false);
   };
