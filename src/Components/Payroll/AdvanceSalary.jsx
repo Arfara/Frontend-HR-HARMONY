@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { APIPayroll } from '@/Apis/APIPayroll';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
@@ -21,13 +20,11 @@ const AdvanceSalary = () => {
 
   const fetchAdvanceSalaries = async () => {
     setIsLoading(true);
-    toast.info("Loading advance salary data...");
     try {
       const response = await APIPayroll.getAllAdvanceSalaries();
       setAdvanceSalaries(response.data || []);
       setIsLoading(false);
     } catch (error) {
-      toast.error("Failed to load advance salaries.");
       setIsLoading(false);
     }
   };
@@ -37,7 +34,7 @@ const AdvanceSalary = () => {
       const response = await APIEmployees.getAllEmployees();
       setEmployees(response.employees || []);
     } catch (error) {
-      toast.error("Failed to load employees.");
+
     }
   };
 
@@ -81,10 +78,9 @@ const AdvanceSalary = () => {
   const handleConfirmDelete = async () => {
     try {
       await APIPayroll.deleteAdvanceSalaryById(deleteAdvanceSalaryId);
-      toast.success("Advance salary deleted successfully");
       fetchAdvanceSalaries();
     } catch (error) {
-      toast.error("Failed to delete advance salary.");
+
     }
     setShowDeleteConfirmation(false);
   };
@@ -103,12 +99,11 @@ const AdvanceSalary = () => {
 
     try {
       await APIPayroll.createAdvanceSalary(data);
-      toast.success("Advance salary created successfully");
       setShowAddForm(false);
       event.target.reset();
       fetchAdvanceSalaries();
     } catch (error) {
-      toast.error("Failed to create advance salary.");
+
     }
   };
 
@@ -127,11 +122,10 @@ const AdvanceSalary = () => {
 
     try {
       await APIPayroll.updateAdvanceSalaryById(editData.id, updatedData);
-      toast.success("Advance salary updated successfully");
       setShowEditPopup(false);
       fetchAdvanceSalaries();
     } catch (error) {
-      toast.error("Failed to update advance salary.");
+
     }
   };
 
