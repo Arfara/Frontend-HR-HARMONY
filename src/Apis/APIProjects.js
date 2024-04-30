@@ -11,7 +11,6 @@ export const APIProjects = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Failed to fetch projects.");
       throw new Error(error);
     }
   },
@@ -23,7 +22,7 @@ export const APIProjects = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success(response.data.message);
+      toast.success("Project created successfully.");
       return response.data;
     } catch (error) {
       toast.error("Failed to create project.");
@@ -40,7 +39,6 @@ export const APIProjects = {
       });
       return response.data.project;
     } catch (error) {
-      toast.error("Failed to retrieve project.");
       throw new Error(error);
     }
   },
@@ -52,7 +50,7 @@ export const APIProjects = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success(response.data.message);
+      toast.success("Project updated successfully.");
       return response.data;
     } catch (error) {
       toast.error("Failed to update project.");
@@ -67,7 +65,7 @@ export const APIProjects = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success(response.data.message);
+      toast.success("Project deleted successfully.");
       return response.data;
     } catch (error) {
       toast.error("Failed to delete project.");
