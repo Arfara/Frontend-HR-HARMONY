@@ -10,7 +10,6 @@ import { Fragment } from 'react';
 import { APITasks } from '@/Apis/APITasks';
 import { APIProjects } from '@/Apis/APIProjects';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import { toast } from 'react-toastify';
 
 const TaskDetails = () => {
   const [progress, setProgress] = useState(0);
@@ -31,7 +30,7 @@ const TaskDetails = () => {
         const response = await APIProjects.getAllProjects();
         setProjects(response.projects || []);
       } catch (error) {
-        toast.error("Failed to fetch projects.");
+
       }
     };
 
@@ -40,7 +39,7 @@ const TaskDetails = () => {
         const response = await APIEmployees.getAllEmployees();
         setEmployees(response.employees || []);
       } catch (error) {
-        toast.error("Failed to fetch employees.");
+
       }
     };
 
@@ -66,7 +65,7 @@ const TaskDetails = () => {
         setShowDeleteConfirmation(false);
         navigate('/tasks/tasks-list');
       } catch (error) {
-        toast.error("Failed to delete task.");
+
       }
     }
   };
@@ -79,7 +78,7 @@ const TaskDetails = () => {
           setTask(response);
         }
       } catch (error) {
-        toast.error("Failed to retrieve task.");
+
       }
     };
   
@@ -94,12 +93,9 @@ const TaskDetails = () => {
         status: status,
         progress_bar: progress
       };
-      console.log("Sending update for status and progress:", updateData);
       await APITasks.updateTaskById(taskId, updateData);
-      toast.success("Task updated successfully.");
     } catch (error) {
-      console.error("Failed to update task status and progress:", error);
-      toast.error("Failed to update task.");
+
     }
   };
 
@@ -175,13 +171,11 @@ const TaskDetails = () => {
         ...localTask,
         estimated_hour: parseInt(localTask.estimated_hour, 10)
       };
-      console.log("Sending update for task:", updatedTask);
+
       try {
         await APITasks.updateTaskById(taskId, updatedTask);
-        toast.success("Task updated successfully.");
       } catch (error) {
-        console.error("Failed to update task:", error);
-        toast.error("Failed to update task.");
+
       }
     };
 
@@ -249,7 +243,6 @@ const TaskDetails = () => {
   const handleDeleteNote = (noteId) => {
     const updatedNotes = task.notes.filter(note => note.id !== noteId);
     setTask({ ...task, notes: updatedNotes });
-    toast.success("Note deleted successfully.");
   };
 
   const PostANoteTab = ({ notes }) => {

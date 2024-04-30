@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import 'moment/locale/id'; // Import Indonesian locale
+import 'moment/locale/id';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-moment.locale('id'); // Set moment to use Indonesian locale
+moment.locale('id');
 const localizer = momentLocalizer(moment);
 
-// Komponen kustom untuk toolbar kalender
 const CustomToolbar = ({ label, onNavigate, onView }) => {
   return (
     <div className="flex justify-between items-center py-2">
@@ -89,7 +88,6 @@ const Legend = () => {
           <span className="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-1"></span>
           <span>On Hold</span>
         </div>
-        {/* Tambahkan elemen lain jika ada status tambahan */}
       </div>
     </div>
   );

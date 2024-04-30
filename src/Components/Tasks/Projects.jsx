@@ -6,7 +6,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { APIProjects } from '@/Apis/APIProjects';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { APIClients } from '@/Apis/APIClients';
-import { toast } from 'react-toastify';
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ const Projects = () => {
       const response = await APIProjects.getAllProjects();
       setProjects(response.projects || []);
     } catch (error) {
-      toast.error("Failed to retrieve projects");
+
     }
   };
 
@@ -44,7 +43,7 @@ const Projects = () => {
       const response = await APICoreHR.getAllDepartments();
       setDepartments(response.departments || []);
     } catch (error) {
-      toast.error("Failed to retrieve departments");
+
     }
   };
 
@@ -53,7 +52,7 @@ const Projects = () => {
       const response = await APIClients.getAllClients();
       setClients(response.data || []);
     } catch (error) {
-      toast.error("Failed to retrieve clients");
+
     }
   };
 
@@ -88,12 +87,8 @@ const Projects = () => {
       employee_id: parseInt(formData.client_id, 10),
     };
 
-    console.log('Sending form data:', dataToSend);
-
     try {
       const response = await APIProjects.createProject(dataToSend);
-      console.log('Response received:', response);
-      toast.success("Project added successfully");
       fetchProjects();
       setShowAddForm(false);
       setFormData({
@@ -108,7 +103,7 @@ const Projects = () => {
         client_id: '',
       });
     } catch (error) {
-      toast.error("Failed to add project");
+
     }
   };
 
@@ -164,11 +159,10 @@ const Projects = () => {
   const handleConfirmDelete = async () => {
     try {
       await APIProjects.deleteProjectById(deleteProjectId);
-      toast.success("Project successfully deleted");
       setShowDeleteConfirmation(false);
       fetchProjects();
     } catch (error) {
-      toast.error("Failed to delete project");
+
     }
   };
 
