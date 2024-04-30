@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { APIRecruitment } from '@/Apis/APIRecruitment';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { Dialog, Transition } from '@headlessui/react';
-import { toast } from 'react-toastify';
 
 const NewOpening = () => {
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ const NewOpening = () => {
       const response = await APIRecruitment.getAllJobs();
       setJoblist(response.new_jobs || []);
     } catch (error) {
-      toast.error("Failed to fetch jobs.");
+
     }
   };
 
@@ -39,7 +38,7 @@ const NewOpening = () => {
       const response = await APICoreHR.getAllDesignations();
       setDesignations(response.designations || []);
     } catch (error) {
-      toast.error("Failed to fetch designations.");
+
     }
   };
 
@@ -85,7 +84,7 @@ const NewOpening = () => {
       setShowAddForm(false);
       fetchJobs();
     } catch (error) {
-      toast.error("Failed to save job.");
+
     }
   };
 
@@ -128,7 +127,7 @@ const NewOpening = () => {
       setShowDeleteConfirmation(false);
       fetchJobs();
     } catch (error) {
-      toast.error("Failed to delete job.");
+
     }
   };
 
