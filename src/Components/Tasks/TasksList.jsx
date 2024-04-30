@@ -5,7 +5,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { APITasks } from '@/Apis/APITasks';
 import { APIProjects } from '@/Apis/APIProjects';
-import { toast } from 'react-toastify';
 
 const TasksList = () => {
   const navigate = useNavigate();
@@ -49,7 +48,7 @@ const TasksList = () => {
       const response = await APITasks.getAllTasks();
       setTasks(response.tasks);
     } catch (error) {
-      toast.error("Failed to retrieve tasks");
+
     }
   };
 
@@ -63,7 +62,7 @@ const TasksList = () => {
         const response = await APIProjects.getAllProjects();
         setProjects(response.projects || []);
       } catch (error) {
-        toast.error("Failed to retrieve projects");
+
       }
     };
   
@@ -85,13 +84,12 @@ const TasksList = () => {
     
     try {
       await APITasks.createTask(taskData);
-      toast.success("Task created successfully");
       setShowAddForm(false);
       setSelectedProject('');
       setDescription('');
       await fetchTasks();
     } catch (error) {
-      toast.error("Failed to create task");
+
     }
   };
 
@@ -116,12 +114,11 @@ const TasksList = () => {
     if (deleteTaskId) {
       try {
         await APITasks.deleteTaskById(deleteTaskId);
-        toast.success("Task deleted successfully");
         setShowDeleteConfirmation(false);
         const updatedTasks = tasks.filter(task => task.id !== deleteTaskId);
         setTasks(updatedTasks);
       } catch (error) {
-        toast.error("Failed to delete task");
+
       }
     }
   };

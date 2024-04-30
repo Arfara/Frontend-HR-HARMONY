@@ -7,7 +7,6 @@ import { APIProjects } from '@/Apis/APIProjects';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APIClients } from '@/Apis/APIClients';
-import { toast } from 'react-toastify';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -36,10 +35,9 @@ const ProjectDetails = () => {
           setProgress(response.project_bar);
           setStatus(response.status);
           setPriority(response.priority);
-          console.log("Project details:", response);
         }
       } catch (error) {
-        toast.error("Failed to fetch project details.");
+
       }
     };
 
@@ -54,7 +52,7 @@ const ProjectDetails = () => {
         const response = await APICoreHR.getAllDepartments();
         setDepartments(response.departments);
       } catch (error) {
-        toast.error("Failed to fetch departments.");
+
       }
     };
 
@@ -63,7 +61,7 @@ const ProjectDetails = () => {
         const response = await APIEmployees.getAllEmployees();
         setEmployees(response.data);
       } catch (error) {
-        toast.error("Failed to fetch employees.");
+
       }
     };
 
@@ -77,7 +75,7 @@ const ProjectDetails = () => {
         const response = await APIClients.getAllClients();
         setClients(response.data);
       } catch (error) {
-        toast.error("Failed to fetch clients.");
+
       }
     };
 
@@ -104,10 +102,8 @@ const ProjectDetails = () => {
         priority: priority,
       };
       await APIProjects.editProjectById(projectId, projectData);
-      console.log("Data sent to backend:", projectData);
-      toast.success("Project updated successfully.");
     } catch (error) {
-      toast.error("Failed to update project.");
+
     }
   };
 
@@ -203,14 +199,11 @@ const ProjectDetails = () => {
         description: localProject.description,
         employee_id: selectedEmployeeId,
       };
-      console.log("Sending update for project:", updatedProject);
+
       try {
         const response = await APIProjects.editProjectById(projectId, updatedProject);
-        console.log("Update response:", response);
-        toast.success("Project updated successfully.");
       } catch (error) {
-        console.error("Failed to update project:", error);
-        toast.error("Failed to update project.");
+
       }
     };
 
