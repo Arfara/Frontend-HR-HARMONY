@@ -36,7 +36,7 @@ const TrainingRouter = () => {
                     <Route path = 'training-sessions' element = { <TrainingSessions/> }/>
                     <Route path = 'trainers' element = { <Trainers/> }/>
                     <Route path = 'training-skills' element = { <TrainingSkills/> }/>
-                    <Route path = 'training-details' element = {<TrainingDetails/>}/>
+                    <Route path = 'training-details/:id' element = {<TrainingDetails/>}/>
                 </Routes>
             </div>
         )
