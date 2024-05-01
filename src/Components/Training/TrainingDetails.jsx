@@ -8,6 +8,7 @@ const TrainingDetails = () => {
     const navigate = useNavigate();
     const [trainingDetails, setTrainingDetails] = useState({});
     const [selectedStatus, setSelectedStatus] = useState(trainingDetails.status || '');
+    const [selectedPerformance, setSelectedPerformance] = useState(trainingDetails.performance || '');
 
     useEffect(() => {
         const fetchTrainingDetails = async () => {
@@ -26,9 +27,13 @@ const TrainingDetails = () => {
         setSelectedStatus(event.target.value);
     };
 
+    const handlePerformanceChange = (event) => {
+        setSelectedPerformance(event.target.value);
+    };
+
     const updateTrainingStatus = async () => {
         try {
-            const updatedData = { ...trainingDetails, status: selectedStatus };
+            const updatedData = { ...trainingDetails, status: selectedStatus, performance: selectedPerformance };
             await APITraining.updateTrainingById(id, updatedData);
             navigate('/training/training-sessions');
         } catch (error) {
@@ -38,15 +43,20 @@ const TrainingDetails = () => {
 
     return (
         <div className="flex flex-col lg:flex-row lg:space-x-8 p-10">
-            <div className="lg:w-1/4 bg-white p-6 rounded-md shadow-lg h-auto ">
+            <div className="lg:w-1/4 bg-white p-6 rounded-md shadow-lg" style={{ alignSelf: 'flex-start' }}>
                 <h2 className="text-xl font-bold mb-4">Update Status</h2>
                 <div className="mb-4 md:col-span-1">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="performance">
                     Performance
                     </label>
                     <div className="relative">
-                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="performance">
+                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="performance" value={selectedPerformance} onChange={handlePerformanceChange}>
+                        <option value="" disabled>Select Performance</option>
                         <option>Not Concluded</option>
+                        <option>Satisfactory</option>
+                        <option>Average</option>
+                        <option>Poor</option>
+                        <option>Excellent</option>
                     </select>
                     </div>
                 </div>
@@ -56,16 +66,11 @@ const TrainingDetails = () => {
                     </label>
                     <div className="relative">
                     <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" value={selectedStatus} onChange={handleStatusChange}>
+                        <option value="" disabled>Select Status</option>
                         <option>Started</option>
                         <option>Not Started</option>
                     </select>
                     </div>
-                </div>
-                <div className="mb-4 md:col-span-3">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="remarks">
-                    Remarks
-                    </label>
-                    <ReactQuill theme="snow" />
                 </div>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2 ml-auto" onClick={updateTrainingStatus}>Update Status</button>
             </div>
@@ -79,6 +84,7 @@ const TrainingDetails = () => {
                         <li className="mb-2 border-b"><span className="font-bold">Start Date: </span>{new Date(trainingDetails.start_date).toLocaleDateString()}</li>
                         <li className="mb-2 border-b"><span className="font-bold">End Date: </span>{new Date(trainingDetails.end_date).toLocaleDateString()}</li>
                         <li className="mb-2 border-b"><span className="font-bold">Status: </span>{trainingDetails.status}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Performance: </span>{trainingDetails.performance}</li>
                         <li className="mb-2 border-b"><span className="font-bold">Created at: </span>{new Date(trainingDetails.created_at).toLocaleDateString()}</li>
                     </ul>
                 </div>
