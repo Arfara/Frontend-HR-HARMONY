@@ -297,7 +297,15 @@ const TrainingSessions = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(training.end_date).toLocaleDateString()}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{training.full_name_employee}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{training.training_cost}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{training.status}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                        training.status === 'Not Started' ? 'bg-red-100 text-red-800' :
+                                        training.status === 'Started' ? 'bg-green-100 text-green-800' :
+                                        'bg-red-100 text-red-800'
+                                    }`}>
+                                        {training.status}
+                                    </span>
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
                             </tr>
                         ))
@@ -335,7 +343,7 @@ const TrainingSessions = () => {
                         <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="trainingSkill" value={editingTraining ? editingTraining.training_skill_id : ''} onChange={(e) => setEditingTraining({...editingTraining, training_skill_id: e.target.value})}>
                             <option value="" disabled>Select Training Skill</option>
                             {trainingSkills.map(skill => (
-                                <option key={skill.id} value={skill.id}>{skill.training_skill}</option>
+                                <option key={skill.id} value={skill.id}>{skill.training_skill || ''}</option>
                             ))}
                         </select>
                         </div>
