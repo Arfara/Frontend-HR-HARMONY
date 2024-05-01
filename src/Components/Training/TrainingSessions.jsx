@@ -136,8 +136,6 @@ const TrainingSessions = () => {
                 training_cost: parseInt(editingTraining.training_cost, 10)
             };
 
-            console.log(updatedTrainingData);
-
             try {
                 const response = await APITraining.updateTrainingById(editingTraining.id, updatedTrainingData);
                 setIsEditModalOpen(false);
