@@ -1,22 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { TrashIcon, PencilAltIcon } from '@heroicons/react/solid';
+import { Dialog, Transition } from '@headlessui/react';
+import { APITraining } from '@/Apis/APITraining';
 
 const TrainingSkills = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
+  const [trainingSkills, setTrainingSkills] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [newSkill, setNewSkill] = useState('');
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedSkillId, setSelectedSkillId] = useState(null);
+  const [currentEdit, setCurrentEdit] = useState(null);
 
-  const handleEditClick = () => {
+  const fetchTrainingSkills = async () => {
+    setIsLoading(true);
+    try {
+      const response = await APITraining.viewAllTrainingSkills();
+      setTrainingSkills(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchTrainingSkills();
+  }, []);
+
+  const handleEditClick = (skill) => {
+    setCurrentEdit(skill);
     setIsEditModalOpen(true);
   };
+
+  const handleInputChange = (e) => {
+    setNewSkill(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await APITraining.createTrainingSkill({ training_skill: newSkill });
+      setNewSkill('');
+      fetchTrainingSkills();
+    } catch (error) {
+
+    }
+  };
+
+  const handleDeleteClick = (id) => {
+    setSelectedSkillId(id);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await APITraining.deleteTrainingSkillById(selectedSkillId);
+      setShowDeleteConfirmation(false);
+      fetchTrainingSkills();
+    } catch (error) {
+
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await APITraining.updateTrainingSkillById(currentEdit.id, { training_skill: currentEdit.training_skill });
+      setIsEditModalOpen(false);
+      fetchTrainingSkills();
+    } catch (error) {
+
+    }
+  };
+
   return (
     <div className="flex justify-between mx-10 my-10">
       <div className="w-1/3">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-blue-500 text-lg font-semibold mb-6">Add New Training Skil</h2>
-          <form>
+          <h2 className="text-blue-500 text-lg font-semibold mb-6">Add New Training Skill</h2>
+          <form onSubmit={handleSubmit}>
             <label className="block mb-4 text-gray-700">
               Training Skill
-              <input type="text" name="trainingSkill" placeholder="Training Skill" className="w-full py-2 px-4 mt-2 border border-gray-300 rounded-md" />
+              <input type="text" name="trainingSkill" placeholder="Training Skill" className="w-full py-2 px-4 mt-2 border border-gray-300 rounded-md" value={newSkill} onChange={handleInputChange} />
             </label>
             <button type="submit" className="bg-blue-500 text-white py-2 px-6 rounded-md">Save</button>
           </form>
@@ -48,22 +113,34 @@ const TrainingSkills = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                    <tr className="group hover:bg-gray-100">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div className="flex justify-between">
-                          <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleEditClick()}>
-                              <PencilAltIcon className="h-5 w-5" />
-                            </button>
-                            <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" >
-                              <TrashIcon className="h-5 w-5" />
-                            </button>
-                          </div>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading training skills data...</td>
+                </tr>
+              ) : trainingSkills.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No training skills data available.</td>
+                </tr>
+              ) : (
+                trainingSkills.map((skill) => (
+                  <tr key={skill.id} className="group hover:bg-gray-100">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex justify-between">
+                        <div>{skill.training_skill}</div>
+                        <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleEditClick(skill)}>
+                            <PencilAltIcon className="h-5 w-5" />
+                          </button>
+                          <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDeleteClick(skill.id)}>
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
-                    </tr>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(skill.CreatedAt).toLocaleDateString()}</td>
+                  </tr>
+                ))
+              )}
               </tbody>
             </table>
           </div>
@@ -86,11 +163,11 @@ const TrainingSkills = () => {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form>
+            <form onSubmit={handleUpdate}>
               <div className="mb-3">
                 <label className="block mb-4 text-gray-700">
-                Training Skill
-                  <input type="text" name="trainingSkill" placeholder="Adaptability Skills" className="w-full py-2 px-4 mt-2 border border-gray-300 rounded-md" />
+                  Training Skill
+                  <input type="text" name="trainingSkill" placeholder="Adaptability Skills" className="w-full py-2 px-4 mt-2 border border-gray-300 rounded-md" value={currentEdit?.training_skill} onChange={(e) => setCurrentEdit({ ...currentEdit, training_skill: e.target.value })} />
                 </label>
               </div>
               <div className="flex justify-end mt-4">
@@ -100,6 +177,70 @@ const TrainingSkills = () => {
             </form>
           </div>
         </div>
+      )}
+      {showDeleteConfirmation && (
+        <Transition appear show={showDeleteConfirmation} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={() => setShowDeleteConfirmation(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                  <div>
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                      <TrashIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                    </div>
+                    <div className="mt-3 text-center sm:mt-5">
+                      <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                        Delete Training Skill
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Are you sure you want to delete this training skill? This action cannot be undone.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                      onClick={handleConfirmDelete}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:col-start-1 sm:text-sm"
+                      onClick={() => setShowDeleteConfirmation(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
       )}
     </div>
   )
