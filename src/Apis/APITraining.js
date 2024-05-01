@@ -40,7 +40,6 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching trainer.");
       throw new Error(error);
     }
   },
@@ -99,7 +98,6 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching training skills.");
       throw new Error(error);
     }
   },
@@ -113,7 +111,6 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching training skill.");
       throw new Error(error);
     }
   },
@@ -172,7 +169,6 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching trainings.");
       throw new Error(error);
     }
   },
@@ -186,7 +182,6 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching training.");
       throw new Error(error);
     }
   },

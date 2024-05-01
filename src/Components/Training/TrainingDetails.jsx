@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
+import { APITraining } from '@/Apis/APITraining';
 import ReactQuill from 'react-quill';
 
 const TrainingDetails = () => {
-    const TrainingOverview = {
-        'Training Skill'  : '',
-        'Trainer'     : '',
-        'Training Cost'       : '',
-        'Start Date'        : '',
-        'End Date'      : '',
-        'Status'    : '',
-        'Created at'      : '',
-        'Associated Goals'       : '',
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [trainingDetails, setTrainingDetails] = useState({});
+    const [selectedStatus, setSelectedStatus] = useState(trainingDetails.status || '');
+
+    useEffect(() => {
+        const fetchTrainingDetails = async () => {
+            try {
+                const response = await APITraining.viewTrainingById(id);
+                setTrainingDetails(response.data);
+            } catch (error) {
+
+            }
+        };
+
+        fetchTrainingDetails();
+    }, [id]);
+
+    const handleStatusChange = (event) => {
+        setSelectedStatus(event.target.value);
     };
 
-    const TrainingName = {
-        'Null' : '',
-    }
-    
+    const updateTrainingStatus = async () => {
+        try {
+            const updatedData = { ...trainingDetails, status: selectedStatus };
+            await APITraining.updateTrainingById(id, updatedData);
+            navigate('/training/training-sessions');
+        } catch (error) {
+
+        }
+    };
+
     return (
         <div className="flex flex-col lg:flex-row lg:space-x-8 p-10">
             <div className="lg:w-1/4 bg-white p-6 rounded-md shadow-lg h-auto ">
@@ -36,7 +55,7 @@ const TrainingDetails = () => {
                     Status
                     </label>
                     <div className="relative">
-                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status">
+                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" value={selectedStatus} onChange={handleStatusChange}>
                         <option>Started</option>
                         <option>Not Started</option>
                     </select>
@@ -48,32 +67,24 @@ const TrainingDetails = () => {
                     </label>
                     <ReactQuill theme="snow" />
                 </div>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2 ml-auto">Update Status</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2 ml-auto" onClick={updateTrainingStatus}>Update Status</button>
             </div>
             <div className="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow-lg mt-4 lg:mt-0 mr-auto">
                 <h2 className="text-xl font-bold mb-4">Overview</h2>
                 <div className="bg-white p-6 rounded shadow">
-                    <div>
-                        <ul>
-                            {Object.entries(TrainingOverview).map(([key, value]) => (
-                            <li key={key} className="mb-2 border-b">
-                                <span className="font-bold">{key} </span>{value}
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <ul>
+                        <li className="mb-2 border-b"><span className="font-bold">Training Skill: </span>{trainingDetails.training_skill}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Trainer: </span>{trainingDetails.full_name_trainer}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Training Cost: </span>{trainingDetails.training_cost}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Start Date: </span>{new Date(trainingDetails.start_date).toLocaleDateString()}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">End Date: </span>{new Date(trainingDetails.end_date).toLocaleDateString()}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Status: </span>{trainingDetails.status}</li>
+                        <li className="mb-2 border-b"><span className="font-bold">Created at: </span>{new Date(trainingDetails.created_at).toLocaleDateString()}</li>
+                    </ul>
                 </div>
                 <h2 className="text-xl font-bold mb-4 mt-4">Training Details</h2>
                 <div className="bg-white p-6 rounded shadow">
-                    <div>
-                        <ul>
-                            {Object.entries(TrainingName).map(([key, value]) => (
-                            <li key={key} className="mb-2 border-b">
-                                <span className="font-bold">{key} </span>{value}
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <p>{trainingDetails.description}</p>
                 </div>
             </div>
         </div>
