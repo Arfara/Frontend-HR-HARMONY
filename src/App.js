@@ -61,7 +61,7 @@ function DashboardLayout() {
             <Route path = "/helpdesk" element = { < Helpdesk/> } />
             <Route path="/helpdesk/ticket-details/:ticketId" element={<TicketDetails />} />
             <Route path = "/client-list" element = { < ClientList/> } />
-            <Route path = "/client-list/client-details" element = { < ClientDetails/> } />
+            <Route path = "/client-list/client-details/:id" element = { < ClientDetails/> } />
             </Routes > 
         </div>
     );

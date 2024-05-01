@@ -18,7 +18,6 @@ export const APIClients = {
       const response = await axiosInstance.get('/admin/clients');
       return response.data;
     } catch (error) {
-      toast.error("Failed to retrieve clients.");
       throw new Error(error);
     }
   },
@@ -28,7 +27,6 @@ export const APIClients = {
       const response = await axiosInstance.get(`/admin/clients/${id}`);
       return response.data;
     } catch (error) {
-      toast.error("Failed to retrieve client.");
       throw new Error(error);
     }
   },
