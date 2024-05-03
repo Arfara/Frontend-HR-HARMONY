@@ -13,6 +13,15 @@ const ClientList = () => {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState(null);
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [contactNumber, setContactNumber] = useState('');
+    const [gender, setGender] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [country, setCountry] = useState('');
+
     const fetchClients = async () => {
         setIsLoading(true);
         try {
@@ -33,6 +42,14 @@ const ClientList = () => {
     };
 
     const handleReset = () => {
+        setFirstName('');
+        setLastName('');
+        setContactNumber('');
+        setGender('');
+        setEmail('');
+        setPassword('');
+        setUsername('');
+        setCountry('');
         setShowAddForm(false);
     };
     
@@ -49,6 +66,28 @@ const ClientList = () => {
         try {
             await APIClients.deleteClientById(selectedClientId);
             setShowDeleteConfirmation(false);
+            fetchClients();
+        } catch (error) {
+
+        }
+    };
+
+    const handleSaveClient = async () => {
+        const clientData = {
+            first_name: firstName,
+            last_name: lastName,
+            contact_number: contactNumber,
+            gender: gender,
+            email: email,
+            password: password,
+            username: username,
+            country: country
+        };
+
+        try {
+            const response = await APIClients.createClient(clientData);
+            handleReset();
+            setShowAddForm(false);
             fetchClients();
         } catch (error) {
 
@@ -72,34 +111,35 @@ const ClientList = () => {
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
                                 First Name
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="firstName" name="firstName" type="text" placeholder="First Name"/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="firstName" name="firstName" type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
                             </div>
                             <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName">
                                 Last Name
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lastName" name="lastName" type="text" placeholder="Last Name"/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lastName" name="lastName" type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
                             </div>
                             <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                                 Password
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password"/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                             </div>
                             <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">
                                 Contact Number
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumber" type="number" placeholder="Contact Number"/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumber" type="number" placeholder="Contact Number" value={contactNumber} onChange={(e) => setContactNumber(e.target.value)}/>
                             </div>
                             <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
                                 Gender
                                 </label>
                                 <div className="relative">
-                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender">
-                                    <option>Male</option>
-                                    <option>Female</option>
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+                                    <option value="" disabled>Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                                 </div>
                             </div>
@@ -107,18 +147,41 @@ const ClientList = () => {
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                                 Email
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email"/>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                             </div>
-                            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Profile Picture */}
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                                Username
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="username" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="country">
+                                Country
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="country" name="country" type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)}/>
+                            </div>
+                            <div className="mb-4 md:col-span-2 lg:col-span-2">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
                                     Profile Picture
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" />
+                                <div className="flex items-center justify-center w-full">
+                                    <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-blue-300 group">
+                                        <div className="flex flex-col items-center justify-center pt-7">
+                                            <svg className="w-10 h-10 text-blue-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                            <p className="lowercase text-sm text-gray-400 group-hover:text-blue-600 pt-1 tracking-wider">Select a photo</p>
+                                            <input type="file" id="profile_picture" name="profile_picture" className="hidden" />
+                                        </div>
+                                    </label>
+                                </div>
+
                             </div>
                         </div>
                         <div className="flex justify-end bg-gray-200 px-4 py-3">
                         <button type="button" onClick={handleReset} className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none">Reset</button>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
+                        <button onClick={handleSaveClient} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
                         </div>
                     </div>
                     </div>
@@ -158,15 +221,20 @@ const ClientList = () => {
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {isLoading ? (
+                        {isLoading ? (
                                 <tr>
-                                    <td colSpan="7" className="text-center py-4 text-sm text-gray-500">Loading client data...</td>
+                                <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading client data...</td>
                                 </tr>
-                            ) : clients.map((client) => (
+                            ) : clients.length === 0 ? (
+                                <tr>
+                                <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No client data available.</td>
+                                </tr>
+                            ) : (
+                            clients.map((client) => (
                                 <tr key={client.id} className="group hover:bg-gray-100">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <div className="flex justify-between">
-                                            <span>{client.first_name} {client.last_name}</span>
+                                            <span>{client.full_name}</span>
                                             <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                 <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetailsClick(client.id)}>
                                                     <ArrowCircleRightIcon className="h-5 w-5" />
@@ -180,11 +248,18 @@ const ClientList = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.username}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.contact_number}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.gender}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.country}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                            client.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                        }`}>
+                                            {client.is_active ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
                                 </tr>
-                            ))}
+                            ))
+                        )}
                         </tbody>
                     </table>
                     </div>
