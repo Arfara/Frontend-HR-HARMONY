@@ -18,6 +18,7 @@ import Helpdesk from './Components/Helpdesk/Helpdesk';
 import TicketDetails from './Components/Helpdesk/TicketDetails';
 import ClientList from './Components/ManageClient/ClientList';
 import ClientDetails from './Components/ManageClient/ClientDetails';
+import LeaveRouter from './Components/LeaveRequest/LeaveRouter';
 
 // eslint-disable-next-line
 function App() {
@@ -60,6 +61,7 @@ function DashboardLayout() {
             <Route path = "/training/*" element = { < TrainingRouter /> } />
             <Route path = "/helpdesk" element = { < Helpdesk/> } />
             <Route path="/helpdesk/ticket-details/:id" element={<TicketDetails />} />
+            <Route path = "/leave/*" element = { < LeaveRouter/> } />
             <Route path = "/client-list" element = { < ClientList/> } />
             <Route path = "/client-list/client-details/:id" element = { < ClientDetails/> } />
             </Routes > 

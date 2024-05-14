@@ -156,7 +156,6 @@ const SideBarData = [
             },
         ]
     },
-
     {
         title: "Recruitment",
         path: "#",
@@ -182,7 +181,6 @@ const SideBarData = [
             }
         ]   
     },
-
     {
         title: "Training",
         path: "#",
@@ -204,13 +202,28 @@ const SideBarData = [
             },
         ]
     },
-
+    {
+        title: "Leave Request",
+        path: "#",
+        icon: <LiaChalkboardTeacherSolid />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Manage Leaves",
+                path: "/leave/manage-leave"
+            },
+            {
+                title: "Leave Type",
+                path: "/leave/leave-type"
+            },
+        ]
+    },
     {
         title: "Manage Client",
         path: "/client-list",
         icon: < FaBuildingUser />
     },
-
     {
         title: "Helpdesk",
         path: "/helpdesk",
