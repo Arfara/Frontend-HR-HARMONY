@@ -32,7 +32,7 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const response = await APIProjects.getAllProjects();
-      setProjects(response.projects || []);
+      setProjects(response.Projects || []);
     } catch (error) {
 
     }
