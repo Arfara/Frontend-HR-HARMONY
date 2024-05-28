@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APIPayroll } from '@/Apis/APIPayroll';
-import { toast } from 'react-toastify';
 
 const PayrollList = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
@@ -18,7 +17,7 @@ const PayrollList = () => {
   const fetchPayrolls = async () => {
     try {
       const payrollsData = await APIPayroll.getAllPayrolls();
-      setPayrolls(payrollsData.payroll_info || []);
+      setPayrolls(payrollsData.PayrollInfo|| []);
     } catch (error) {
 
     }
@@ -59,11 +58,9 @@ const PayrollList = () => {
   const handleConfirmPayment = async () => {
     try {
       await APIPayroll.updatePayrollStatus(selectedPayrollId, { paid_status: true });
-      toast.success("Payment successful");
       closePaymentModal();
       fetchPayrolls();
     } catch (error) {
-      toast.error("Failed to make payment");
     }
   };
 
