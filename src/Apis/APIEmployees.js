@@ -3,6 +3,21 @@ import { toast } from 'react-toastify';
 import axiosInstance from '@/configs/axiosInstance';
 
 export const APIEmployees = {
+  changePassword: async (id, data, token) => {
+    try {
+      const response = await axiosInstance.put(`/change-password/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } 
+  },
+
+
   createEmployee: async (employeeData) => {
       try {
         const result = await axiosInstance.post('/admin/employees', employeeData);
@@ -25,6 +40,32 @@ export const APIEmployees = {
       } catch (error) {
           throw new Error(error);
       }
+  },
+
+  getEmployeeById: async (employeeId) => {
+    try {
+      const result = await axiosInstance.get(`/admin/employees/${employeeId}`);
+      return result.data;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error occurred while retrieving employee details.");
+      }
+      throw new Error(error);
+    }
+  },
+
+  updateEmployee: async (employeeId, employeeData) => {
+    try {
+      const result = await axiosInstance.put(`/admin/employees/${employeeId}`, employeeData);
+      toast.success(result.data.message);
+      return result.data;
+    } catch (error) {
+      toast.error("Error occurred while updating employee.");
+      console.error("API Error:", error.response ? error.response.data : error.message);
+      throw new Error(error);
+    }
   },
 
   deleteEmployee: async (employeeId) => {

@@ -43,7 +43,7 @@ const EmployeesRouter = () => {
               <Route path="shift-scheduling" element={< ShiftScheduling />} />
               <Route path="employees-exit" element={< EmployeesExit />} />
               <Route path="exit-type" element={< ExitType />} />
-              <Route path="employee-details/:empId" element={< EmployeeDetails />} />
+              <Route path="employee-details/:id" element={< EmployeeDetails />} />
           </Routes>
 
         </div>
