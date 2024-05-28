@@ -19,8 +19,10 @@ const EmployeesExit = () => {
   const fetchExitEmployees = async () => {
     try {
       const response = await APIEmployees.getAllEmployeeExits();
-      setExitEmployees(response.exit_employees || []);
+      setExitEmployees(response.ExitEmployees || []);
+      console.log(response.ExitEmployees);
     } catch (error) {
+
 
     }
   };
@@ -281,13 +283,12 @@ const EmployeesExit = () => {
                   </tr>
                 ) : (
                   exitEmployees.map((exitEmployee) => {
-                    const employeeName = employees.find(emp => emp.id === exitEmployee.employee_id)?.first_name + " " + employees.find(emp => emp.id === exitEmployee.employee_id)?.last_name || 'Nama tidak ditemukan';
                     const exitTypeName = exitTypes.find(type => type.id === exitEmployee.exit_id)?.exit_name || 'Tipe tidak ditemukan';
 
                     return (
                       <tr key={exitEmployee.id} onMouseEnter={() => handleMouseEnter(exitEmployee.id)} onMouseLeave={handleMouseLeave} className="hover:bg-gray-100">
                         <td className="px-6 py-4 text-sm text-gray-900 flex justify-between items-center">
-                          <span>{employeeName}</span>
+                          <span>{exitEmployee.full_name_employee}</span>
                           {hoveredExitId === exitEmployee.id && (
                             <button onClick={() => handleDeleteClick(exitEmployee.id)} className="text-red-600 hover:text-red-900 ml-4 mr-2">
                               <TrashIcon className="h-5 w-5" />
