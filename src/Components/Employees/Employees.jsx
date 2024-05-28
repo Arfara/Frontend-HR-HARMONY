@@ -37,7 +37,7 @@ const Employees = () => {
       const response = await APIEmployees.getAllEmployees();
       setEmployees(response.employees || []);
     } catch (error) {
-
+      console.error('Error fetching employees:', error);
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +48,7 @@ const Employees = () => {
       const response = await APIEmployees.getRoles();
       setRoles(response.roles || []);
     } catch (error) {
-
+      console.error('Error fetching roles:', error);
     }
   };
 
@@ -57,7 +57,7 @@ const Employees = () => {
       const response = await APIEmployees.getOfficeShifts();
       setOfficeShifts(response.shifts || []);
     } catch (error) {
-      
+      console.error('Error fetching office shifts:', error);
     }
   };
 
@@ -66,7 +66,7 @@ const Employees = () => {
       const response = await APICoreHR.getAllDepartments();
       setDepartments(response.departments || []);
     } catch (error) {
-      
+      console.error('Error fetching departments:', error);
     }
   };
 
@@ -75,7 +75,7 @@ const Employees = () => {
       const response = await APICoreHR.getAllDesignations();
       setDesignations(response.designations || []);
     } catch (error) {
-      
+      console.error('Error fetching designations:', error);
     }
   };
 
@@ -107,7 +107,7 @@ const Employees = () => {
         fetchEmployees();
         handleHideDeleteConfirmation();
       } catch (error) {
-
+        console.error('Error deleting employee:', error);
       }
     }
   };
@@ -151,8 +151,13 @@ const Employees = () => {
     }
   };
 
-  const handleViewDetails = (employee) => {
-    navigate(`/employees/employee-details/${employee.identifier}`);
+  const handleViewDetails = async (employee) => {
+    try {
+      const employeeDetails = await APIEmployees.getEmployeeById(employee.id);
+      navigate(`/employee-details/${employee.id}`, { state: { employeeDetails } });
+    } catch (error) {
+      console.error("Error fetching employee details:", error);
+    }
   };
 
   const validateContactNumber = (value) => {

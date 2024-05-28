@@ -11,6 +11,7 @@ import TasksRouter from './Components/Tasks/TasksRouter';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 import CoreHRRouter from './Components/CoreHR/CoreHRRouter';
 import EmployeesRouter from './Components/Employees/EmployeesRouter';
+import EmployeeDetails from './Components/Employees/EmployeeDetails';
 import PerformanceRouter from './Components/Performances/PerformanceRouter';
 import RecruitmentRouter from './Components/Recruitment/RecruitmentRouter';
 import TrainingRouter from './Components/Training/TrainingRouter';
@@ -51,7 +52,8 @@ function DashboardLayout() {
         <SideBar / >
             <Routes >
             <Route path = "/dashboard" element = { < Dashboard / > }/>   
-            <Route path = "/employees/*" element = { < EmployeesRouter / > }/>   
+            <Route path = "/employees/*" element = { < EmployeesRouter / > }/> 
+            <Route path = "/employee-details/:id" element = { < EmployeeDetails / > }/>
             <Route path = "/payroll/*" element = { < PayrollRouter / > }/>  
             <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
             <Route path = "/tasks/*" element = { < TasksRouter / > }/>    
