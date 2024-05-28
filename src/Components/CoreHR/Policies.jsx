@@ -15,17 +15,19 @@ const Policies = () => {
   const [policyTitle, setPolicyTitle] = useState('');
   const [policyDescription, setPolicyDescription] = useState('');
 
-  useEffect(() => {
-    const fetchPolicies = async () => {
-      setIsLoading(true);
-      try {
-        const data = await APICoreHR.getAllPolicies();
-        setPolicies(data.policies || []);
-      } catch (error) {
 
-      }
-      setIsLoading(false);
-    };
+  const fetchPolicies = async () => {
+    setIsLoading(true);
+    try {
+      const data = await APICoreHR.getAllPolicies();
+      setPolicies(data.Policies || []);
+      console.log(data.Policies);
+    } catch (error) {
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     fetchPolicies();
   }, []);
 
@@ -40,9 +42,9 @@ const Policies = () => {
       await APICoreHR.createPolicy(policyData);
       setPolicyTitle('');
       setPolicyDescription('');
-      const updatedPolicies = await APICoreHR.getAllPolicies();
-      setPolicies(updatedPolicies.policies || []);
+      fetchPolicies();
     } catch (error) {
+
 
     }
     setIsLoading(false);
@@ -66,8 +68,8 @@ const Policies = () => {
         const updatedPolicies = await APICoreHR.getAllPolicies();
         setPolicies(updatedPolicies.policies || []);
         setShowDeleteConfirmation(false);
+        fetchPolicies();
       } catch (error) {
-
       }
     }
     setIsLoading(false);
