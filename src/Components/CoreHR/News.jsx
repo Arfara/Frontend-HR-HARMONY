@@ -4,6 +4,8 @@ import 'react-quill/dist/quill.snow.css';
 import { PencilAltIcon, TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { APICoreHR } from '@/Apis/APICoreHR';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const News = () => {
   const navigate = useNavigate();
@@ -31,6 +33,17 @@ const News = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [newsData, setNewsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(newsData.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedNewsData = getPaginatedData(newsData, currentPage, perPage);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -244,7 +257,8 @@ const News = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -272,8 +286,8 @@ const News = () => {
                     Loading news data...
                   </td>
                 </tr>
-              ) : newsData.length > 0 ? (
-                newsData.map((item, index) => (
+              ) : paginatedNewsData.length > 0 ? (
+                paginatedNewsData.map((item, index) => (
                   <tr key={item.id} 
                       onMouseEnter={() => setHoveredRow(index)}
                       onMouseLeave={() => setHoveredRow(null)}
@@ -308,14 +322,13 @@ const News = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-          Showing 1 to {newsData.length} of {newsData.length} entries
-          <div>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-              Previous
-            </button>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-              Next
-            </button>
+        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, newsData.length)} of {newsData.length} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
