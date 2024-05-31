@@ -5,6 +5,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const initialNewAttendanceState = {
   employee_id: '',
@@ -27,6 +29,18 @@ const ManualAttendances = () => {
   const [filteredAttendances, setFilteredAttendances] = useState([]);
   const [newAttendance, setNewAttendance] = useState(initialNewAttendanceState);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(attendances.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedAttendances = getPaginatedData(attendances, currentPage, perPage);
+
   
   const fetchAttendancesAndEmployees = async () => {
     setIsLoading(true);
@@ -183,10 +197,11 @@ const ManualAttendances = () => {
                 Add New
               </button>
             </div>
-            <div className="flex justify-between px-3 mt-3">
+            <div className="flex justify-between px-3 mt-3 mb-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300">
+                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                  <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
@@ -198,14 +213,14 @@ const ManualAttendances = () => {
               </div>
             </div>
             <div className="overflow-x-auto mb-4 px-3">
-              <table className="min-w-screen divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Employee</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">In Time</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Out Time</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Total Hours</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Time</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Out Time</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Hours</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -213,8 +228,8 @@ const ManualAttendances = () => {
                     <tr>
                       <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendances data...</td>
                     </tr>
-                  ) : filteredAttendances.length > 0 ? (
-                    filteredAttendances.map((attendance) => {
+                  ) : paginatedAttendances.length > 0 ? (
+                    paginatedAttendances.map((attendance) => {
                       const employee = employees.find(emp => emp.id === attendance.employee_id);
                       return (
                         <tr key={attendance.id}
@@ -234,10 +249,10 @@ const ManualAttendances = () => {
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.attendance_date}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.in_time}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.out_time}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.total_work || 'N/A'}</td>
+                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.attendance_date}</td>
+                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.in_time}</td>
+                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.out_time}</td>
+                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.total_work || 'N/A'}</td>
                         </tr>
                       );
                     })
@@ -249,16 +264,15 @@ const ManualAttendances = () => {
                 </tbody>
               </table>
             </div>
-            <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3">
-                Showing 1 to {filteredAttendances.length} of {filteredAttendances.length} records
-                <div>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 mb-4 ml-3 rounded focus:outline-none">
-                    Previous
-                  </button>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                    Next
-                  </button>
-                </div>
+            <div className="text-gray-500 text-sm py-3 flex justify-between items-center px-3">
+              <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, attendances.length)} of {attendances.length} records</span>
+              <div className="flex justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
           </div>
         </div>
