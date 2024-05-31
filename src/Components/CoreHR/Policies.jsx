@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APICoreHR } from '@/Apis/APICoreHR';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const Policies = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,7 +16,17 @@ const Policies = () => {
   const [selectedPolicyId, setSelectedPolicyId] = useState(null);
   const [policyTitle, setPolicyTitle] = useState('');
   const [policyDescription, setPolicyDescription] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(policies.length / perPage);
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedPolicies = getPaginatedData(policies, currentPage, perPage);
 
   const fetchPolicies = async () => {
     setIsLoading(true);
@@ -126,8 +138,11 @@ const Policies = () => {
             <div className="flex justify-between px-3 mt-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300">
+                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                  <option value="5">5</option>
                   <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
                 </select>
                 entries
               </label>
@@ -155,8 +170,8 @@ const Policies = () => {
                     <tr>
                       <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading policies data...</td>
                     </tr>
-                  ) : policies.length > 0 ? (
-                    policies.map((policy) => (
+                  ) : paginatedPolicies.length > 0 ? (
+                    paginatedPolicies.map((policy) => (
                       <tr 
                         key={policy.id} 
                         onMouseEnter={() => setHoveredRow(policy.id)}
@@ -189,15 +204,14 @@ const Policies = () => {
               </table>
             </div>
             <div className="text-gray-500 text-sm p-3 flex justify-between items-center">
-              Showing 1 to {policies.length} of {policies.length} records
-              <div>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                  Previous
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                  Next
-                </button>
-              </div>
+            <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, policies.length)} of {policies.length} records</span>
+                <div className="flex justify-end">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
             </div>
           </div>
         </div>

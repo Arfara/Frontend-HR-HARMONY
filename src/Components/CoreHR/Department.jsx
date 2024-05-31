@@ -3,6 +3,8 @@ import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const Department = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -15,6 +17,17 @@ const Department = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [departmentName, setDepartmentName] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(departments.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedDepartments = getPaginatedData(departments, currentPage, perPage);
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -134,7 +147,8 @@ const Department = () => {
             <div className="flex justify-between px-3 mt-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300">
+                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                  <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
@@ -159,8 +173,8 @@ const Department = () => {
                     <tr>
                       <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading departments data...</td>
                     </tr>
-                  ) : departments && departments.length > 0 ? (
-                    departments.map((department, index) => {
+                  ) : paginatedDepartments && paginatedDepartments.length > 0 ? (
+                    paginatedDepartments.map((department, index) => {
                       const employee = employees.find(emp => emp.id === department.employee_id);
                       return (
                         <tr 
@@ -197,14 +211,13 @@ const Department = () => {
                 </tbody>
               </table>
               <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-                <span>Showing 1 to {departments.length} of {departments.length} records</span>
-                <div>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                    Previous
-                  </button>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                    Next
-                  </button>
+                <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, departments.length)} of {departments.length} records</span>
+                <div className="flex justify-end">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             </div>
