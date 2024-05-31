@@ -4,6 +4,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APIPayroll } from '@/Apis/APIPayroll';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const PayrollList = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
@@ -13,6 +15,17 @@ const PayrollList = () => {
   const [employees, setEmployees] = useState([]);
   const [payrolls, setPayrolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(payrolls.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedPayrolls = getPaginatedData(payrolls, currentPage, perPage);
 
   const fetchPayrolls = async () => {
     try {
@@ -95,7 +108,8 @@ const PayrollList = () => {
           <div className="flex justify-between mb-4">
             <label className="flex items-center">
               Show
-              <select className="mx-2 rounded border border-gray-300">
+              <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
@@ -123,12 +137,12 @@ const PayrollList = () => {
                   <tr>
                     <td colSpan="6" className="text-center py-4 text-sm text-gray-500">Loading payroll data...</td>
                   </tr>
-                ) : payrolls.length === 0 ? (
+                ) : paginatedPayrolls.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-4 text-sm text-gray-500">No payroll data available.</td>
                   </tr>
                 ) : (
-                  payrolls.map((payroll) => {
+                  paginatedPayrolls.map((payroll) => {
                     const employee = employees.find(e => e.id === payroll.employee_id);
                     return (
                       <tr key={payroll.payroll_id}
@@ -165,14 +179,13 @@ const PayrollList = () => {
             </table>
           </div>
           <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to {payrolls.length} of {payrolls.length} records
-            <div>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                Previous
-              </button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                Next
-              </button>
+            <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, payrolls.length)} of {payrolls.length} records</span>
+            <div className="flex justify-end">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </div>
