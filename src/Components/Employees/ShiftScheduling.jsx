@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import moment from 'moment';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const ShiftScheduling = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -22,6 +24,17 @@ const ShiftScheduling = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedShiftId, setSelectedShiftId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(shifts.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedShifts = getPaginatedData(shifts, currentPage, perPage);
 
   useEffect(() => {
     fetchShifts();
@@ -297,11 +310,12 @@ const ShiftScheduling = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
             entries
           </label>
           <div className="flex justify-end">
@@ -330,8 +344,8 @@ const ShiftScheduling = () => {
                 <tr>
                   <td colSpan="9" className="text-center py-4 text-sm text-gray-500">Loading shifts data...</td>
                 </tr>
-              ) : shifts.length > 0 ? (
-                shifts.map((shift) => (
+              ) : paginatedShifts.length > 0 ? (
+                paginatedShifts.map((shift) => (
                   <tr key={shift.id}
                       onMouseEnter={() => handleMouseEnter(shift.id)}
                       onMouseLeave={handleMouseLeave}
@@ -380,15 +394,14 @@ const ShiftScheduling = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-              Showing 1 to {shifts.length} of {shifts.length} records
-              <div>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                  Previous
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                  Next
-                </button>
-              </div>
+          <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, shifts.length)} of {shifts.length} records</span>
+            <div className="flex justify-end">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
         </div>
       </div>
       {showEditForm && editingShift && (
