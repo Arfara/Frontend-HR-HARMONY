@@ -4,6 +4,8 @@ import { APIPayroll } from '@/Apis/APIPayroll';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const AdvanceSalary = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -17,6 +19,17 @@ const AdvanceSalary = () => {
   const [employees, setEmployees] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(advanceSalaries.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedAdvanceSalaries = getPaginatedData(advanceSalaries, currentPage, perPage);
 
   const fetchAdvanceSalaries = async () => {
     setIsLoading(true);
@@ -205,10 +218,11 @@ const AdvanceSalary = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
             </select>
             entries
           </label>
@@ -238,8 +252,8 @@ const AdvanceSalary = () => {
                 <tr>
                   <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading advance salary data...</td>
                 </tr>
-              ) : advanceSalaries.length > 0 ? (
-                advanceSalaries.map((record) => (
+              ) : paginatedAdvanceSalaries.length > 0 ? (
+                paginatedAdvanceSalaries.map((record) => (
                   <tr key={record.id}
                       onMouseEnter={() => handleMouseEnter(record.id)}
                       onMouseLeave={handleMouseLeave}
@@ -290,15 +304,14 @@ const AdvanceSalary = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-              Showing 1 to {advanceSalaries.length} of {advanceSalaries.length} records
-              <div>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                  Previous
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                  Next
-                </button>
-              </div>
+          <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, advanceSalaries.length)} of {advanceSalaries.length} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
       {showDeleteConfirmation && (
