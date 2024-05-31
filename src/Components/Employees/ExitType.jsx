@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const ExitType = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -11,6 +13,17 @@ const ExitType = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedExitTypeId, setSelectedExitTypeId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(exitTypes.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedExitTypes = getPaginatedData(exitTypes, currentPage, perPage);
 
   useEffect(() => {
     const fetchExitTypes = async () => {
@@ -106,7 +119,8 @@ const ExitType = () => {
             <div className="flex justify-between px-3 mt-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300">
+                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                  <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
@@ -130,8 +144,8 @@ const ExitType = () => {
                     <tr>
                       <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading exit types data...</td>
                     </tr>
-                  ) : exitTypes.length > 0 ? (
-                    exitTypes.map((exitType, index) => (
+                  ) : paginatedExitTypes.length > 0 ? (
+                    paginatedExitTypes.map((exitType, index) => (
                       <tr 
                         key={exitType.id} 
                         onMouseEnter={() => setHoveredRow(index)}
@@ -162,14 +176,13 @@ const ExitType = () => {
                 </tbody>
               </table>
               <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-                Showing 1 to {exitTypes.length} of {exitTypes.length} records
-                <div>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                    Previous
-                  </button>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                    Next
-                  </button>
+              <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, exitTypes.length)} of {exitTypes.length} records</span>
+                <div className="flex justify-end">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               </div>
             </div>

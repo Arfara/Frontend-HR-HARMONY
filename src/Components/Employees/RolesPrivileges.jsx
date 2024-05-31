@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const RolesPrivileges = () => {
   const [showAddRole, setShowAddRole] = useState(false);
@@ -11,6 +13,17 @@ const RolesPrivileges = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(roles.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedRoles = getPaginatedData(roles, currentPage, perPage);
 
   useEffect(() => {
     fetchRoles();
@@ -156,7 +169,8 @@ const RolesPrivileges = () => {
           <div className="flex justify-between mb-4">
             <label className="flex items-center">
               Show
-              <select className="mx-2 rounded border border-gray-300">
+              <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
                 <option value="50">50</option>
@@ -181,7 +195,7 @@ const RolesPrivileges = () => {
                 <tr>
                   <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading roles data...</td>
                 </tr>
-              ) : roles.map((role) => (
+              ) : paginatedRoles.map((role) => (
                 <tr key={role.id}
                     onMouseEnter={() => handleMouseEnter(role.id)}
                     onMouseLeave={handleMouseLeave}
@@ -207,16 +221,13 @@ const RolesPrivileges = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-          <div>
-            Showing 1 to {roles.length} of {roles.length} records
-          </div>
-          <div>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-              Previous
-            </button>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-              Next
-            </button>
+        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, roles.length)} of {roles.length} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
