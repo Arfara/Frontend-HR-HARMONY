@@ -5,6 +5,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { APIPerformance } from '@/Apis/APIPerformance';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import ReactStars from 'react-stars';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const initialTechnicalRatings = {
   'BDD - Selling Skill': 0,
@@ -63,6 +65,17 @@ const PerformanceIndicator = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteKpiIndicatorId, setDeleteKpiIndicatorId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(kpiIndicators.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedKpiIndicators = getPaginatedData(kpiIndicators, currentPage, perPage);
 
   useEffect(() => {
     const fetchKpiIndicators = async () => {
@@ -302,7 +315,8 @@ const PerformanceIndicator = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -314,7 +328,7 @@ const PerformanceIndicator = () => {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto mb-4 p-5">
+      <div className="overflow-x-auto px-3">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -330,12 +344,12 @@ const PerformanceIndicator = () => {
                 <tr>
                   <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading performance indicator data...</td>
                 </tr>
-              ) : kpiIndicators.length === 0 ? (
+              ) : paginatedKpiIndicators.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="text-center py-4 text-sm text-gray-500">No performance indicators data available.</td>
                 </tr>
               ) : (
-                kpiIndicators.map((indicator) => (
+                paginatedKpiIndicators.map((indicator) => (
                   <tr key={indicator.id} className="group hover:bg-gray-100">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex justify-between">
@@ -368,12 +382,14 @@ const PerformanceIndicator = () => {
             </tbody>
           </table>
       </div>
-      <div className="flex justify-between items-center mt-5 p-5">
-        <div className="text-sm">Showing 1 to {kpiIndicators.length} of {kpiIndicators.length} records</div>
-        <div className="flex items-center">
-          <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Previous</button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">1</button>
-          <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md ml-2">Next</button>
+      <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
+      <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, kpiIndicators.length)} of {kpiIndicators.length} records</span>
+        <div className="flex justify-end">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
