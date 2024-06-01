@@ -17,5 +17,6 @@ export const AuthService = {
 
   clearCredentialsFromCookie() {
     Cookies.remove('token');
+    window.location.href = '/loginsignup';
   },
 };
