@@ -2,7 +2,8 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { TrashIcon, PencilAltIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { APILeaveRequest } from '@/Apis/APILeaveRequest';
-
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const LeaveType = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -14,6 +15,17 @@ const LeaveType = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedSkillId, setSelectedSkillId] = useState(null);
   const [currentEdit, setCurrentEdit] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(leaveTypes.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedLeaveTypes = getPaginatedData(leaveTypes, currentPage, perPage);
 
   const fetchLeaveTypes = async () => {
     setIsLoading(true);
@@ -130,9 +142,10 @@ const LeaveType = () => {
           <div className="flex justify-between mb-6">
             <div className="flex items-center">
               <span>Show</span>
-              <select name="entries" className="mx-2 px-2 py-1 border border-gray-300 rounded-md">
+              <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <option value="5">5</option>
                 <option value="10">10</option>
-                <option value="25">25</option>
+                <option value="20">20</option>
                 <option value="50">50</option>
               </select>
               <span>entries</span>
@@ -160,7 +173,7 @@ const LeaveType = () => {
                   <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No leave types data available.</td>
                 </tr>
               ) : (
-                leaveTypes.map((leaveType) => (
+                paginatedLeaveTypes.map((leaveType) => (
                   <tr key={leaveType.id} className="group hover:bg-gray-100">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex justify-between">
@@ -183,13 +196,15 @@ const LeaveType = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-between items-center text-sm text-gray-700">
-            <span>Showing 1 to 2 of 2 records</span>
-            <div className="flex items-center">
-              <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Previous</button>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-md">1</button>
-              <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md ml-2">Next</button>
-            </div>
+          <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
+              <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, leaveTypes.length)} of {leaveTypes.length} records</span>
+              <div className="flex justify-end">
+                  <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  />
+              </div>
           </div>
         </div>
       </div>
