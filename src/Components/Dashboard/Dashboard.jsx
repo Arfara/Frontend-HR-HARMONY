@@ -4,19 +4,18 @@ import Header from '../Header/Header';
 import Chart from 'react-apexcharts';
 import { CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, UserGroupIcon, BriefcaseIcon, CalendarIcon } from '@heroicons/react/solid';
 import { APIDashboard } from '@/Apis/APIDashboard';
-import { toast } from 'react-toastify';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const [loadingMessage, setLoadingMessage] = useState("Loading...");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await APIDashboard.getDashboardData();
-        setDashboardData(data.dashboard || {});
-        toast.success('Data loaded successfully! 🎉');
+        setDashboardData(data || {});
       } catch (error) {
-
+        setLoadingMessage("Failed to load data. Please try again.");
       }
     };
 
@@ -24,12 +23,17 @@ const Dashboard = () => {
   }, []);
 
   if (!dashboardData) {
-    return <div className="flex items-center justify-center h-screen">
-      <div className="text-xl font-semibold">Loading...</div>
-    </div>;
+    return (
+      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+        <div className="text-center">
+          <img src={require('../Assets/comp_logo.png')} alt="Loading" className="h-48 w-48 mx-auto animate-bounce" />
+          <p className="mt-4 text-lg text-gray-700">{loadingMessage}</p>
+        </div>
+      </div>
+    );
   }
 
-  const projectsStatusSeries = dashboardData.project_summary.map(project => project.project_bar);
+  const projectsStatusSeries = dashboardData.project_summary ? dashboardData.project_summary.map(project => project.project_bar) : [];
 
   const payrollChartOptions = {
     chart: {
@@ -39,7 +43,19 @@ const Dashboard = () => {
       }
     },
     xaxis: {
-      categories: ['Jan 2024', 'Dec 2023', 'Nov 2023', 'Oct 2023', 'Sep 2023', 'Aug 2023', 'Jul 2023', 'Jun 2023', 'May 2023', 'Apr 2023', 'Mar 2023', 'Feb 2023']
+      categories: dashboardData.payroll_summary ? dashboardData.payroll_summary.map(item => item.month) : []
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return value.toFixed(0);
+        }
+      }
+    },
+    dataLabels: {
+      formatter: function (value) {
+        return value.toFixed(0);
+      }
     },
     colors: ['#3056d3'],
   };
@@ -47,7 +63,7 @@ const Dashboard = () => {
   const payrollChartSeries = [
     {
       name: 'Payroll',
-      data: dashboardData.payroll_summary.map(item => item.amount)
+      data: dashboardData.payroll_summary ? dashboardData.payroll_summary.map(item => item.amount) : []
     }
   ];
 
@@ -76,10 +92,10 @@ const Dashboard = () => {
         }
       }
     },
-    labels: ['Project A', 'Project B', 'Project C', 'Project D'],
+    labels: dashboardData.project_summary ? dashboardData.project_summary.map(project => project.project_name) : [],
   };
 
-  const tasksStatusSeries = [76, 85, 101, 98];
+  const tasksStatusSeries = dashboardData.task_summary ? dashboardData.task_summary.map(task => task.progress_bar) : [];
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -90,7 +106,7 @@ const Dashboard = () => {
             <div className="flex items-center">
               <CheckCircleIcon className="h-10 w-10 text-white mr-4" />
               <div>
-                <p className="font-bold text-2xl">{dashboardData.project_status.Completed}</p>
+                <p className="font-bold text-2xl">{dashboardData.project_status?.Completed || 0}</p>
                 <p className="text-sm">Total Completed</p>
               </div>
             </div>
@@ -99,7 +115,7 @@ const Dashboard = () => {
             <div className="flex items-center">
               <RefreshIcon className="h-10 w-10 text-white mr-4" />
               <div>
-                <p className="font-bold text-2xl">{dashboardData.project_status.In_Progress}</p>
+                <p className="font-bold text-2xl">{dashboardData.project_status?.In_Progress || 0}</p>
                 <p className="text-sm">Total In Progress</p>
               </div>
             </div>
@@ -108,7 +124,7 @@ const Dashboard = () => {
             <div className="flex items-center">
               <PlayIcon className="h-10 w-10 text-white mr-4" />
               <div>
-                <p className="font-bold text-2xl">{dashboardData.project_status.Not_Started}</p>
+                <p className="font-bold text-2xl">{dashboardData.project_status?.Not_Started || 0}</p>
                 <p className="text-sm">Total Not Started</p>
               </div>
             </div>
@@ -117,8 +133,8 @@ const Dashboard = () => {
             <div className="flex items-center">
               <PauseIcon className="h-10 w-10 text-white mr-4" />
               <div>
-                <p className="font-bold text-2xl">{dashboardData.project_status.On_Hold}</p>
-                <p className="text-sm">Total On Hold</p>
+                <p className="font-bold text-2xl">{dashboardData.project_status?.Cancelled || 0}</p>
+                <p className="text-sm">Total Cancelled</p>
               </div>
             </div>
           </div>
@@ -162,7 +178,7 @@ const Dashboard = () => {
 
           <div className="lg:col-span-1">
             {/* Department wise staff */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-6 transition-transform transform hover:scale-110 hover:shadow-2xl">
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-6 transition-transform transform hover:scale-105 hover:shadow-2xl">
               <div className="text-xl font-semibold mb-4 flex items-center">
                 <UserGroupIcon className="h-6 w-6 text-gray-600 mr-2" />
                 Department Wise Staff
@@ -170,17 +186,17 @@ const Dashboard = () => {
               <div className="flex items-center mb-4">
                 <UserGroupIcon className="h-8 w-8 mr-4" />
                 <div>
-                  <p className="font-bold text-lg">Total Departments: {Object.keys(dashboardData.departments).length}</p>
+                  <p className="font-bold text-lg">Total Departments: {dashboardData.departments ? Object.keys(dashboardData.departments).length : 0}</p>
                   <p className="text-sm">View the distribution of staff across different departments</p>
                 </div>
               </div>
               <ul className="space-y-2">
-                {Object.entries(dashboardData.departments).map(([department, count]) => (
+                {dashboardData.departments ? Object.entries(dashboardData.departments).map(([department, count]) => (
                   <li key={department} className="flex justify-between">
                     <span>{department}</span>
                     <span>{count}</span>
                   </li>
-                ))}
+                )) : null}
               </ul>
             </div>
 
@@ -193,17 +209,17 @@ const Dashboard = () => {
               <div className="flex items-center mb-4">
                 <BriefcaseIcon className="h-8 w-8 mr-4" />
                 <div>
-                  <p className="font-bold text-lg">Total Designations: {Object.keys(dashboardData.designations).length}</p>
+                  <p className="font-bold text-lg">Total Designations: {dashboardData.designations ? Object.keys(dashboardData.designations).length : 0}</p>
                   <p className="text-sm">View the distribution of staff across different designations</p>
                 </div>
               </div>
               <ul className="space-y-2">
-                {Object.entries(dashboardData.designations).map(([designation, count]) => (
+                {dashboardData.designations ? Object.entries(dashboardData.designations).map(([designation, count]) => (
                   <li key={designation} className="flex justify-between">
                     <span>{designation}</span>
                     <span>{count}</span>
                   </li>
-                ))}
+                )) : null}
               </ul>
             </div>
 
@@ -216,14 +232,14 @@ const Dashboard = () => {
               <div className="flex items-center mb-4">
                 <CalendarIcon className="h-8 w-8 mr-4" />
                 <div>
-                  <p className="font-bold text-lg">Total Staff: {dashboardData.attendance_summary.total_staff}</p>
+                  <p className="font-bold text-lg">Total Staff: {dashboardData.attendance_summary ? dashboardData.attendance_summary.total_staff : 0}</p>
                   <p className="text-sm">View the attendance details of staff</p>
                 </div>
               </div>
               <div className="space-y-2">
-                <p>Total Staff: {dashboardData.attendance_summary.total_staff}</p>
-                <p>Present: {dashboardData.attendance_summary.present}</p>
-                <p>Absent: {dashboardData.attendance_summary.absent}</p>
+                <p>Total Staff: {dashboardData.attendance_summary ? dashboardData.attendance_summary.total_staff : 0}</p>
+                <p>Present: {dashboardData.attendance_summary ? dashboardData.attendance_summary.present : 0}</p>
+                <p>Absent: {dashboardData.attendance_summary ? dashboardData.attendance_summary.absent : 0}</p>
               </div>
             </div>
           </div>
@@ -234,5 +250,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
 

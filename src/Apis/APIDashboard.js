@@ -9,8 +9,10 @@ export const APIDashboard = {
                 'Authorization': `Bearer YOUR_TOKEN_HERE`
             }
           });
+          toast.success(result.data.message);
           return result.data;
         } catch (error) {
+          toast.error(error.response.data.message);
           throw new Error(error);
         }
     }
