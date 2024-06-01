@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginSignup from './Components/LoginSignup/LoginSignup'
@@ -20,8 +20,8 @@ import TicketDetails from './Components/Helpdesk/TicketDetails';
 import ClientList from './Components/ManageClient/ClientList';
 import ClientDetails from './Components/ManageClient/ClientDetails';
 import LeaveRouter from './Components/LeaveRequest/LeaveRouter';
+import { AuthService } from '../src/services/AuthService';
 
-// eslint-disable-next-line
 function App() {
     return ( 
         <Router>
@@ -48,25 +48,31 @@ function App() {
 
 function DashboardLayout() {
     return (
-        <div style = {{ display: "flex" } } >
-        <SideBar / >
-            <Routes >
-            <Route path = "/dashboard" element = { < Dashboard / > }/>   
-            <Route path = "/employees/*" element = { < EmployeesRouter / > }/> 
-            <Route path = "/employee-details/:id" element = { < EmployeeDetails / > }/>
-            <Route path = "/payroll/*" element = { < PayrollRouter / > }/>  
-            <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
-            <Route path = "/tasks/*" element = { < TasksRouter / > }/>    
-            <Route path = "/performance/*" element = { < PerformanceRouter / > }/> 
-            <Route path = "/corehr/*" element = { < CoreHRRouter /> }/>  
-            <Route path = "/recruitment/*" element = { < RecruitmentRouter/> } />
-            <Route path = "/training/*" element = { < TrainingRouter /> } />
-            <Route path = "/helpdesk" element = { < Helpdesk/> } />
-            <Route path="/helpdesk/ticket-details/:id" element={<TicketDetails />} />
-            <Route path = "/leave/*" element = { < LeaveRouter/> } />
-            <Route path = "/client-list" element = { < ClientList/> } />
-            <Route path = "/client-list/client-details/:id" element = { < ClientDetails/> } />
-            </Routes > 
+        <div style={{ display: "flex" }}>
+        <SideBar />
+            <Routes>
+            {AuthService.isAuthorized() ? (
+                <>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/employees/*" element={<EmployeesRouter />} />
+                <Route path="/employee-details/:id" element={<EmployeeDetails />} />
+                <Route path="/payroll/*" element={<PayrollRouter />} />
+                <Route path="/attendances/*" element={<AttendancesRouter />} />
+                <Route path="/tasks/*" element={<TasksRouter />} />
+                <Route path="/performance/*" element={<PerformanceRouter />} />
+                <Route path="/corehr/*" element={<CoreHRRouter />} />
+                <Route path="/recruitment/*" element={<RecruitmentRouter />} />
+                <Route path="/training/*" element={<TrainingRouter />} />
+                <Route path="/helpdesk" element={<Helpdesk />} />
+                <Route path="/helpdesk/ticket-details/:id" element={<TicketDetails />} />
+                <Route path="/leave/*" element={<LeaveRouter />} />
+                <Route path="/client-list" element={<ClientList />} />
+                <Route path="/client-list/client-details/:id" element={<ClientDetails />} />
+                </>
+            ) : (
+                <Route path="*" element={<Navigate replace to="/loginsignup" />} />
+            )}
+            </Routes>
         </div>
     );
 }
