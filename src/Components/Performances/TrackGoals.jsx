@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { APIPerformance } from '@/Apis/APIPerformance';
 import ReactStars from 'react-stars';
 import { Dialog, Transition } from '@headlessui/react';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const TrackGoals = () => {
   const navigate = useNavigate();
@@ -24,6 +26,17 @@ const TrackGoals = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [description, setDescription] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(goals.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedGoals = getPaginatedData(goals, currentPage, perPage);
 
   useEffect(() => {
     fetchGoalTypes();
@@ -204,11 +217,12 @@ const TrackGoals = () => {
       <div className="flex justify-between items-center mb-5 p-5">
         <div className="flex items-center">
           <span>Show</span>
-          <select name="entries" className="mx-2 px-2 py-1 border border-gray-300 rounded-md">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-          </select>
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
           <span>entries</span>
         </div>
         <div className="flex">
@@ -232,12 +246,12 @@ const TrackGoals = () => {
                 <tr>
                   <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading request loan data...</td>
                 </tr>
-              ) : goals.length === 0 ? (
+              ) : paginatedGoals.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No request loan data available.</td>
                 </tr>
               ) : (
-                goals.map((goal) => (
+                paginatedGoals.map((goal) => (
                   <tr key={goal.id}
                       onMouseEnter={() => handleMouseEnter(goal.id)}
                       onMouseLeave={handleMouseLeave}
@@ -276,14 +290,16 @@ const TrackGoals = () => {
             </tbody>
           </table>
         </div>
-      <div className="flex justify-between items-center mt-5 p-5">
-        <div className="text-sm">Showing 1 to {goals.length} of {goals.length} records</div>
-        <div className="flex items-center">
-          <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Previous</button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">1</button>
-          <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md ml-2">Next</button>
+        <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
+        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, goals.length)} of {goals.length} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
-      </div>
       <Transition appear show={showDeleteConfirmation} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => setShowDeleteConfirmation(false)}>
           <Transition.Child
