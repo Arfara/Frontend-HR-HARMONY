@@ -3,6 +3,8 @@ import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APILeaveRequest } from '@/Apis/APILeaveRequest';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const ManageLeaves = () => {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -20,6 +22,17 @@ const ManageLeaves = () => {
     const [selectedLeaveRequestId, setSelectedLeaveRequestId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [editingLeaveRequest, setEditingLeaveRequest] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(5);
+    const totalPages = Math.ceil(leaveRequests.length / perPage);
+  
+    const handlePageChange = (page) => {
+      if (page > 0 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
+  
+    const paginatedLeaveRequests = getPaginatedData(leaveRequests, currentPage, perPage);
 
     const fetchLeaveRequest = async () => {
       setIsLoading(true);
@@ -210,7 +223,8 @@ const ManageLeaves = () => {
             <div className="flex justify-between mb-4">
                 <label className="flex items-center">
                     Show
-                    <select className="mx-2 rounded border border-gray-300">
+                    <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                        <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="50">50</option>
@@ -246,7 +260,7 @@ const ManageLeaves = () => {
                           <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No leave request data available.</td>
                         </tr>
                       ) : (
-                        leaveRequests.map((leaveRequest) => (
+                        paginatedLeaveRequests.map((leaveRequest) => (
                             <tr key={leaveRequest.id} className="group hover:bg-gray-100">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div className="flex justify-between">
@@ -284,15 +298,14 @@ const ManageLeaves = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-                Showing {leaveRequests.length} to of {leaveRequests.length} records
-                <div>
-                    <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                        Previous
-                    </button>
-                    <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                        Next
-                    </button>
+            <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
+                <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, leaveRequests.length)} of {leaveRequests.length} records</span>
+                <div className="flex justify-end">
+                    <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    />
                 </div>
             </div>
         </div>
