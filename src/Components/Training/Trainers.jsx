@@ -4,6 +4,8 @@ import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APITraining } from '@/Apis/APITraining';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const Trainers = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -20,6 +22,17 @@ const Trainers = () => {
   const [deleteTrainerId, setDeleteTrainerId] = useState(null);
   const [editingTrainerId, setEditingTrainerId] = useState(null);
   const [editingTrainerData, setEditingTrainerData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const totalPages = Math.ceil(trainers.length / perPage);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const paginatedTrainers = getPaginatedData(trainers, currentPage, perPage);
 
   const fetchTrainers = async () => {
     setIsLoading(true);
@@ -190,7 +203,8 @@ const Trainers = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -220,12 +234,12 @@ const Trainers = () => {
                 <tr>
                   <td colSpan="6" className="text-center py-4 text-sm text-gray-500">Loading trainers data...</td>
                 </tr>
-              ) : trainers.length === 0 ? (
+              ) : paginatedTrainers.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-4 text-sm text-gray-500">No trainers data available.</td>
                 </tr>
               ) : (
-                trainers.map(trainer => (
+                paginatedTrainers.map(trainer => (
                   <tr className="group hover:bg-gray-100">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex justify-between">
@@ -250,17 +264,16 @@ const Trainers = () => {
             </tbody>
           </table>
         </div>
-        <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to of 3 records
-            <div>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                Previous
-              </button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                Next
-              </button>
-            </div>
+        <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
+          <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, trainers.length)} of {trainers.length} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
+        </div>
       </div>
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" id="edit-training-session-modal">

@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import { APITraining } from '@/Apis/APITraining';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import Pagination from '../Pagination';
+import { getPaginatedData } from '@/Models/PaginationModel';
 
 const TrainingSessions = () => {
 
@@ -27,6 +29,17 @@ const TrainingSessions = () => {
     const [selectedTrainingId, setSelectedTrainingId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [editingTraining, setEditingTraining] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(5);
+    const totalPages = Math.ceil(trainings.length / perPage);
+  
+    const handlePageChange = (page) => {
+      if (page > 0 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
+  
+    const paginatedTrainings = getPaginatedData(trainings, currentPage, perPage);
 
     const fetchTrainings = async () => {
       setIsLoading(true);
@@ -237,7 +250,8 @@ const TrainingSessions = () => {
             <div className="flex justify-between mb-4">
                 <label className="flex items-center">
                     Show
-                    <select className="mx-2 rounded border border-gray-300">
+                    <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                        <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="50">50</option>
@@ -269,12 +283,12 @@ const TrainingSessions = () => {
                         <tr>
                           <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading training data...</td>
                         </tr>
-                      ) : trainings.length === 0 ? (
+                      ) : paginatedTrainings.length === 0 ? (
                         <tr>
                           <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No training data available.</td>
                         </tr>
                       ) : (
-                        trainings.map((training) => (
+                        paginatedTrainings.map((training) => (
                             <tr key={training.id} className="group hover:bg-gray-100">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div className="flex justify-between">
@@ -314,14 +328,13 @@ const TrainingSessions = () => {
                 </table>
             </div>
             <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-                Showing {trainings.length} to of {trainings.length} records
-                <div>
-                    <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                        Previous
-                    </button>
-                    <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                        Next
-                    </button>
+                <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, trainings.length)} of {trainings.length} records</span>
+                <div className="flex justify-end">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
                 </div>
             </div>
         </div>
