@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-transform-private-methods": "^7.23.3",
-    "@craco/craco": "^7.1.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^1.0.6",
     "@testing-library/jest-dom": "^5.17.0",
@@ -38,7 +37,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && postcss src/index.css -o src/output.css",
+    "build": "GENERATE_SOURCEMAP=false craco build && postcss src/index.css -o src/output.css",
     "test": "craco test",
     "eject": "craco eject"
   },
@@ -62,6 +61,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@craco/craco": "^7.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "postcss-nesting": "^12.0.2"
