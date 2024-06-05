@@ -33,13 +33,15 @@ export const APIEmployees = {
       }
   },
 
-  getAllEmployees: async () => {
-      try {
-          const result = await axiosInstance.get('/admin/employees');
-          return result.data;
-      } catch (error) {
-          throw new Error(error);
-      }
+  getAllEmployees: async (params) => {
+    try {
+      const result = await axiosInstance.get('/admin/employees', {
+        params,
+      });
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 
   getEmployeeById: async (employeeId) => {
@@ -63,7 +65,6 @@ export const APIEmployees = {
       return result.data;
     } catch (error) {
       toast.error("Error occurred while updating employee.");
-      console.error("API Error:", error.response ? error.response.data : error.message);
       throw new Error(error);
     }
   },
@@ -98,12 +99,10 @@ export const APIEmployees = {
     }
   },
 
-  getRoles: async () => {
+  getRoles: async (params) => {
     try {
         const result = await axiosInstance.get('/roles', {
-            headers: {
-                'Authorization': `Bearer YOUR_TOKEN_HERE`
-            }
+            params,
         });
         return result.data;
     } catch (error) {
@@ -157,12 +156,10 @@ export const APIEmployees = {
     }
   },
 
-  getOfficeShifts: async () => {
+  getOfficeShifts: async (params) => {
     try {
         const result = await axiosInstance.get('/shifts', {
-            headers: {
-                'Authorization': `Bearer YOUR_TOKEN_HERE`
-            }
+            params,
         });
         return result.data;
     } catch (error) {
@@ -216,12 +213,10 @@ export const APIEmployees = {
     }
   },
   
-  getAllExitTypes: async () => {
+  getAllExitTypes: async (params) => {
     try {
       const result = await axiosInstance.get('/exits', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -278,12 +273,10 @@ export const APIEmployees = {
     }
   },
 
-  getAllEmployeeExits: async () => {
+  getAllEmployeeExits: async (params) => {
     try {
       const result = await axiosInstance.get('/admin/employees/exit', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {

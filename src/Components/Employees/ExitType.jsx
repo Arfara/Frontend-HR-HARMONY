@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const ExitType = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
@@ -13,37 +13,47 @@ const ExitType = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedExitTypeId, setSelectedExitTypeId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(exitTypes.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedExitTypes = getPaginatedData(exitTypes, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedExitTypes = getPaginatedData(exitTypes, currentPage, per_page);
+
+  const fetchExitTypes = async () => {
+    setIsLoading(true);
+    try {
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIEmployees.getAllExitTypes(params);
+      const formattedData = response.exits.map(exit => ({
+        ...exit,
+        created_at: exit.created_at.split('T')[0],
+        UpdatedAt: exit.UpdatedAt.split('T')[0]
+      }));
+      setExitTypes(formattedData || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
+      setIsLoading(false);
+    } catch (error) {
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    const fetchExitTypes = async () => {
-      setIsLoading(true);
-      try {
-        const data = await APIEmployees.getAllExitTypes();
-        const formattedData = data.exits.map(exit => ({
-          ...exit,
-          created_at: exit.created_at.split('T')[0],
-          UpdatedAt: exit.UpdatedAt.split('T')[0]
-        }));
-        setExitTypes(formattedData || []);
-      } catch (error) {
-
-      }
-      setIsLoading(false);
-    };
-
     fetchExitTypes();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   const handleEditClick = (exitType) => {
     setCurrentEdit(exitType);
@@ -58,7 +68,6 @@ const ExitType = () => {
         setExitTypes(updatedExitTypes || []);
         setIsEditModalOpen(false);
       } catch (error) {
-
       }
     }
   };
@@ -119,7 +128,7 @@ const ExitType = () => {
             <div className="flex justify-between px-3 mt-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
@@ -128,7 +137,7 @@ const ExitType = () => {
                 entries
               </label>
               <div className="flex justify-end">
-               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+                <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
               </div>
             </div>
             <div className="overflow-x-auto mb-4 px-3">
@@ -176,11 +185,11 @@ const ExitType = () => {
                 </tbody>
               </table>
               <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-              <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, exitTypes.length)} of {exitTypes.length} records</span>
+              <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
                 <div className="flex justify-end">
                   <Pagination
                     currentPage={currentPage}
-                    totalPages={totalPages}
+                    totalPages={Math.ceil(total_count / per_page)}
                     onPageChange={handlePageChange}
                   />
                 </div>

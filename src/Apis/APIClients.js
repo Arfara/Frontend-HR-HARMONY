@@ -13,9 +13,11 @@ export const APIClients = {
     }
   },
 
-  getAllClients: async () => {
+  getAllClients: async (params) => {
     try {
-      const response = await axiosInstance.get('/admin/clients');
+      const response = await axiosInstance.get('/admin/clients', {
+        params,
+      });
       return response.data;
     } catch (error) {
       throw new Error(error);

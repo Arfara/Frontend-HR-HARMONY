@@ -1,5 +1,19 @@
 import React from 'react';
 
+export const getPaginatedData = (data, page, perPage) => {
+    const totalData = data.length;
+    const totalPages = Math.ceil(totalData / perPage);
+    const validPage = page > totalPages ? totalPages : page;
+    const offset = (validPage - 1) * perPage;
+    const safeOffset = Math.max(0, offset);
+    return data.slice(safeOffset, safeOffset + perPage);
+};
+
+export const getFilteredPaginatedData = (data, page, perPage, searchQuery) => {
+  const filteredData = data.filter(item => item.toLowerCase().includes(searchQuery.toLowerCase()));
+  return getPaginatedData(filteredData, page, perPage);
+};
+
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div className="flex items-center space-x-2">

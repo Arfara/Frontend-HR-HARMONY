@@ -30,7 +30,7 @@ const LandingPage = () => {
           <Link to="about" smooth={true} duration={500}>About</Link>
           <Link to="featured-products" smooth={true} duration={500}>Products</Link>
           <Link to="contact-us" smooth={true} duration={500}>Contact Us</Link>
-          <RouterLink to="/LoginSignup">Sign In</RouterLink>
+          <RouterLink to="/login">Sign In</RouterLink>
         </nav>
       </header>
 

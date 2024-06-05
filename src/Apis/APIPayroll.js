@@ -3,12 +3,10 @@ import { toast } from 'react-toastify';
 import axiosInstance from '@/configs/axiosInstance';
 
 export const APIPayroll = {
-  getAllPayrolls: async () => {
+  getAllPayrolls: async (params) => {
     try {
       const result = await axiosInstance.get('/payrolls', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -16,12 +14,10 @@ export const APIPayroll = {
     }
   },
 
-  getPayrollHistory: async () => {
+  getPayrollHistory: async (params) => {
     try {
       const result = await axiosInstance.get('/payrolls/history', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -59,12 +55,10 @@ export const APIPayroll = {
     }
   },
 
-  getAllAdvanceSalaries: async () => {
+  getAllAdvanceSalaries: async (params) => {
     try {
       const result = await axiosInstance.get('/advance_salaries', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -130,12 +124,10 @@ export const APIPayroll = {
     }
   },
 
-  getAllRequestLoans: async () => {
+  getAllRequestLoans: async (params) => {
     try {
       const result = await axiosInstance.get('/request_loans', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
