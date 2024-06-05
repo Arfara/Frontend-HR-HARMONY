@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import LoginSignup from './Components/LoginSignup/LoginSignup'
+import Login from './Components/Login/Login'
 import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
@@ -27,7 +27,7 @@ function App() {
         <Router>
             <Routes >
             <Route path = "/" element = { < LandingPage / > }/>  
-            <Route path = "/loginsignup" element = { < LoginSignup / > }/>  
+            <Route path = "/login" element = { < Login / > }/>  
             <Route path = "/*" element = { < DashboardLayout / > }/>  
             </Routes > 
             <ToastContainer
@@ -70,7 +70,7 @@ function DashboardLayout() {
                 <Route path="/client-list/client-details/:id" element={<ClientDetails />} />
                 </>
             ) : (
-                <Route path="*" element={<Navigate replace to="/loginsignup" />} />
+                <Route path="*" element={<Navigate replace to="/login" />} />
             )}
             </Routes>
         </div>

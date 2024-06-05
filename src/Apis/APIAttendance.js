@@ -18,13 +18,10 @@ export const APIAttendance  = {
     }
   },
 
-  getAllAttendances: async (queryParams) => {
+  getAllAttendances: async (params) => {
     try {
       const result = await axiosInstance.get('/attendances', {
-        params: queryParams,
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -90,12 +87,10 @@ export const APIAttendance  = {
     }
   },
 
-  getAllOvertimeRequests: async () => {
+  getAllOvertimeRequests: async (params) => {
     try {
       const result = await axiosInstance.get('/overtime_requests', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {

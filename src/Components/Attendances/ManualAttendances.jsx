@@ -5,8 +5,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const initialNewAttendanceState = {
   employee_id: '',
@@ -29,40 +29,55 @@ const ManualAttendances = () => {
   const [filteredAttendances, setFilteredAttendances] = useState([]);
   const [newAttendance, setNewAttendance] = useState(initialNewAttendanceState);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(attendances.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedAttendances = getPaginatedData(attendances, currentPage, perPage);
-
-  
-  const fetchAttendancesAndEmployees = async () => {
-    setIsLoading(true);
-    try {
-      const attendancesData = await APIAttendance.getAllAttendances();
-      const employeesData = await APIEmployees.getAllEmployees();
-      setAttendances(attendancesData.data || []);
-      setEmployees(employeesData.employees || []);
-      setFilteredAttendances(attendancesData.data || []);
-    } catch (error) {
-
-    }
-    setIsLoading(false);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
   };
 
-  useEffect(() => {
-    fetchAttendancesAndEmployees();
-  }, []);
+  const paginatedAttendances = getPaginatedData(attendances, currentPage, per_page);
+  console.log(attendances)
+
+  const fetchAttendances = async () => {
+    setIsLoading(true);
+    try {
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIAttendance.getAllAttendances(params);
+      setAttendances(response.data || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
+    } catch (error) {
+    }
+    setIsLoading(false);
+  }
 
   useEffect(() => {
-    setFilteredAttendances(attendances);
-  }, [attendances]);
+    fetchAttendances();
+  }, [currentPage, per_page, searchQuery]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await APIEmployees.getAllEmployees();
+        setEmployees(response.employees || []);
+      } catch (error) {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchEmployees();
+  }, []);
 
   const handleEditClick = (attendance) => {
     setCurrentEdit({
@@ -95,7 +110,7 @@ const ManualAttendances = () => {
       if (response.code === 201) {
         setIsAddModalOpen(false);
         setNewAttendance(initialNewAttendanceState);
-        fetchAttendancesAndEmployees();
+        fetchAttendances();
       }
     } catch (error) {
 
@@ -123,7 +138,7 @@ const ManualAttendances = () => {
       const response = await APIAttendance.updateAttendance(dataToUpdate.id, dataToUpdate);
       if (response.code === 200) {
         setIsEditModalOpen(false);
-        fetchAttendancesAndEmployees();
+        fetchAttendances();
       }
     } catch (error) {
 
@@ -136,7 +151,7 @@ const ManualAttendances = () => {
     try {
       await APIAttendance.deleteAttendance(selectedAttendanceId);
       setShowDeleteConfirmation(false);
-      fetchAttendancesAndEmployees();
+      fetchAttendances();
     } catch (error) {
 
     }
@@ -200,7 +215,7 @@ const ManualAttendances = () => {
             <div className="flex justify-between px-3 mt-3 mb-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+                <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
@@ -209,7 +224,7 @@ const ManualAttendances = () => {
                 entries
               </label>
               <div className="flex justify-end">
-               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+                <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
               </div>
             </div>
             <div className="overflow-x-auto mb-4 px-3">
@@ -225,51 +240,45 @@ const ManualAttendances = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {isLoading ? (
-                    <tr>
-                      <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendances data...</td>
+                  <tr>
+                    <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendance data...</td>
+                  </tr>
+                ) : paginatedAttendances.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
+                  </tr>
+                ) : (
+                  paginatedAttendances.map((attendance) => (
+                    <tr key={attendance.id} className="group hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div className="flex justify-between">
+                          <div>{attendance.full_name_employee}</div>
+                          <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleEditClick(attendance)}>
+                              <PencilAltIcon className="h-5 w-5" />
+                            </button>
+                            <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDeleteClick(attendance.id)}>
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.designation_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.in_time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.out_time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.total_work}</td>
                     </tr>
-                  ) : paginatedAttendances.length > 0 ? (
-                    paginatedAttendances.map((attendance) => {
-                      const employee = employees.find(emp => emp.id === attendance.employee_id);
-                      return (
-                        <tr key={attendance.id}
-                            onMouseEnter={() => setHoveredId(attendance.id)}
-                            onMouseLeave={() => setHoveredId(null)}
-                            className="group hover:bg-gray-100">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex justify-between">
-                            <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'N/A'}</span>
-                            {hoveredId === attendance.id && (
-                              <div className="flex items-center">
-                                <button onClick={() => handleEditClick(attendance)} className="text-indigo-600 hover:text-indigo-900 ml-5 mr-2">
-                                  <PencilAltIcon className="h-5 w-5" />
-                                </button>
-                                <button onClick={() => handleDeleteClick(attendance.id)} className="text-red-600 hover:text-red-800">
-                                  <TrashIcon className="h-5 w-5" />
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.attendance_date}</td>
-                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.in_time}</td>
-                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.out_time}</td>
-                          <td className="px-6 py-3 text-sm text-gray-500">{attendance.total_work || 'N/A'}</td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
-                    </tr>
-                  )}
+                  ))
+                )}
                 </tbody>
               </table>
             </div>
             <div className="text-gray-500 text-sm py-3 flex justify-between items-center px-3">
-              <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, attendances.length)} of {attendances.length} records</span>
+            <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
               <div className="flex justify-end">
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={totalPages}
+                  totalPages={Math.ceil(total_count / per_page)}
                   onPageChange={handlePageChange}
                 />
               </div>

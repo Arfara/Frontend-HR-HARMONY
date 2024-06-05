@@ -18,12 +18,10 @@ export const APIPerformance = {
     }
   },
 
-  viewAllKpiIndicators: async () => {
+  viewAllKpiIndicators: async (params) => {
     try {
       const result = await axiosInstance.get('/kpi_indicators', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -90,12 +88,10 @@ export const APIPerformance = {
     }
   },
 
-  viewAllKpaIndicators: async () => {
+  viewAllKpaIndicators: async (params) => {
     try {
       const result = await axiosInstance.get('/kpa_indicators', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -163,12 +159,10 @@ export const APIPerformance = {
     }
   },
 
-  viewAllGoals: async () => {
+  viewAllGoals: async (params) => {
     try {
       const result = await axiosInstance.get('/goals', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -236,16 +230,13 @@ export const APIPerformance = {
     }
   },
 
-  viewAllGoalTypes: async () => {
+  viewAllGoalTypes: async (params) => {
     try {
       const result = await axiosInstance.get('/goals_types', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching all goal types");
       throw new Error(error);
     }
   },

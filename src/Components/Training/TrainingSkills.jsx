@@ -2,8 +2,8 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { TrashIcon, PencilAltIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { APITraining } from '@/Apis/APITraining';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const TrainingSkills = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -13,23 +13,33 @@ const TrainingSkills = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedSkillId, setSelectedSkillId] = useState(null);
   const [currentEdit, setCurrentEdit] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(trainingSkills.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedTrainingSkills = getPaginatedData(trainingSkills, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedTrainingSkills = getPaginatedData(trainingSkills, currentPage, per_page);
 
   const fetchTrainingSkills = async () => {
     setIsLoading(true);
     try {
-      const response = await APITraining.viewAllTrainingSkills();
-      setTrainingSkills(response.data);
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APITraining.viewAllTrainingSkills(params);
+      setTrainingSkills(response.data || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -38,7 +48,7 @@ const TrainingSkills = () => {
   
   useEffect(() => {
     fetchTrainingSkills();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   const handleEditClick = (skill) => {
     setCurrentEdit(skill);
@@ -106,7 +116,7 @@ const TrainingSkills = () => {
           <div className="flex justify-between mb-6">
             <div className="flex items-center">
               <span>Show</span>
-              <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
@@ -115,7 +125,7 @@ const TrainingSkills = () => {
               <span>entries</span>
             </div>
             <div className="search-box">
-              <input type="text" placeholder="Search" className="py-2 px-4 border border-gray-300 rounded-md" />
+              <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
           </div>
           <div className="overflow-x-auto mb-4">
@@ -159,15 +169,15 @@ const TrainingSkills = () => {
             </table>
           </div>
           <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
-            <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, trainingSkills.length)} of {trainingSkills.length} records</span>
+          <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
             <div className="flex justify-end">
               <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={Math.ceil(total_count / per_page)}
                 onPageChange={handlePageChange}
               />
             </div>
-          </div> 
+          </div>
         </div>
       </div>
       {isEditModalOpen && (

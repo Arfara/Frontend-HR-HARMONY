@@ -5,8 +5,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { APIPerformance } from '@/Apis/APIPerformance';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import ReactStars from 'react-stars';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const initialTechnicalRatings = {
   'BDD - Selling Skill': 0,
@@ -65,26 +65,36 @@ const PerformanceIndicator = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteKpiIndicatorId, setDeleteKpiIndicatorId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(kpiIndicators.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedKpiIndicators = getPaginatedData(kpiIndicators, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedKpiIndicators = getPaginatedData(kpiIndicators, currentPage, per_page);
 
   useEffect(() => {
     const fetchKpiIndicators = async () => {
       setIsLoading(true);
       try {
-        const response = await APIPerformance.viewAllKpiIndicators();
+        const params = { page: currentPage, per_page: per_page, search: searchQuery };
+        const response = await APIPerformance.viewAllKpiIndicators(params);
         setKpiIndicators(response.data || []);
+        setTotalCount(response.pagination.total_count || 0);
+        setCurrentPage(response.pagination.page || 1);
+        setPerPage(response.pagination.per_page || 10);
+        setIsLoading(false);
       } catch (error) {
-
       } finally {
         setIsLoading(false);
       }
@@ -101,7 +111,7 @@ const PerformanceIndicator = () => {
 
     fetchKpiIndicators();
     fetchDesignations();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -315,7 +325,7 @@ const PerformanceIndicator = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -324,7 +334,7 @@ const PerformanceIndicator = () => {
             entries
           </label>
           <div className="flex">
-            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" />
+            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
         </div>
       </div>
@@ -383,11 +393,11 @@ const PerformanceIndicator = () => {
           </table>
       </div>
       <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
-      <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, kpiIndicators.length)} of {kpiIndicators.length} records</span>
+      <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
         <div className="flex justify-end">
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={Math.ceil(total_count / per_page)}
             onPageChange={handlePageChange}
           />
         </div>

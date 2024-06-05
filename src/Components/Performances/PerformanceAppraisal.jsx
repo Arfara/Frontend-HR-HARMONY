@@ -6,8 +6,8 @@ import ReactStars from 'react-stars';
 import { Dialog, Transition } from '@headlessui/react';
 import { APIPerformance } from '@/Apis/APIPerformance';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const initialTechnicalRatings = {
   'BDD - Selling Skill': 0,
@@ -69,28 +69,38 @@ const PerformanceAppraisal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [selectedKpaId, setSelectedKpaId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(kpaIndicators.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedKpaIndicators = getPaginatedData(kpaIndicators, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedKpaIndicators = getPaginatedData(kpaIndicators, currentPage, per_page);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const response = await APIPerformance.viewAllKpaIndicators();
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIPerformance.viewAllKpaIndicators(params);
       setKpaIndicators(response.data || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
       setIsLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -312,7 +322,7 @@ const PerformanceAppraisal = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -321,7 +331,7 @@ const PerformanceAppraisal = () => {
             entries
           </label>
           <div className="flex">
-            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" />
+          <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
         </div>
       </div>
@@ -376,11 +386,11 @@ const PerformanceAppraisal = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
-        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, kpaIndicators.length)} of {kpaIndicators.length} records</span>
+        <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
           <div className="flex justify-end">
             <Pagination
               currentPage={currentPage}
-              totalPages={totalPages}
+              totalPages={Math.ceil(total_count / per_page)}
               onPageChange={handlePageChange}
             />
           </div>

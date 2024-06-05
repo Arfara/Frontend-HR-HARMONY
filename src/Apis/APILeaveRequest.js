@@ -17,16 +17,13 @@ export const APILeaveRequest = {
     }
   },
 
-  getAllLeaveRequestTypes: async () => {
+  getAllLeaveRequestTypes: async (params) => {
     try {
       const result = await axiosInstance.get('/leave_request_types', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching leave request types.");
       throw new Error(error);
     }
   },
@@ -89,12 +86,10 @@ export const APILeaveRequest = {
     }
   },
 
-  getAllLeaveRequests: async () => {
+  getAllLeaveRequests: async (params) => {
     try {
       const result = await axiosInstance.get('/leave_requests', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {

@@ -18,12 +18,10 @@ export const APICoreHR = {
     }
   },
   
-  getAllDepartments: async () => {
+  getAllDepartments: async (params) => {
     try {
       const result = await axiosInstance.get('/departments', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -89,12 +87,10 @@ export const APICoreHR = {
     }
   },
 
-  getAllDesignations: async () => {
+  getAllDesignations: async (params) => {
     try {
       const result = await axiosInstance.get('/designations', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -147,12 +143,10 @@ export const APICoreHR = {
     }
   },
 
-  getAllPolicies: async () => {
+  getAllPolicies: async (params) => {
     try {
       const result = await axiosInstance.get('/policies', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -218,12 +212,10 @@ export const APICoreHR = {
     }
   },
 
-  getAllAnnouncements: async () => {
+  getAllAnnouncements: async (params) => {
     try {
       const result = await axiosInstance.get('/announcements', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {

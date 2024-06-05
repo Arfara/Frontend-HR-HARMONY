@@ -17,12 +17,10 @@ export const APITraining = {
     }
   },
 
-  viewAllTrainers: async () => {
+  viewAllTrainers: async (params) => {
     try {
       const result = await axiosInstance.get('/trainers', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -89,12 +87,10 @@ export const APITraining = {
     }
   },
 
-  viewAllTrainingSkills: async () => {
+  viewAllTrainingSkills: async (params) => {
     try {
       const result = await axiosInstance.get('/training_skills', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -160,12 +156,10 @@ export const APITraining = {
     }
   },
 
-  viewAllTrainings: async () => {
+  viewAllTrainings: async (params) => {
     try {
       const result = await axiosInstance.get('/trainings', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {

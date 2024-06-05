@@ -4,38 +4,51 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APIPayroll } from '@/Apis/APIPayroll';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const PayrollList = () => {
-  const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
   const [selectedMonth, setSelectedMonth] = useState('2024-03');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPayrollId, setSelectedPayrollId] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [payrolls, setPayrolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(payrolls.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedPayrolls = getPaginatedData(payrolls, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedPayrolls = getPaginatedData(payrolls, currentPage, per_page);
 
   const fetchPayrolls = async () => {
     try {
-      const payrollsData = await APIPayroll.getAllPayrolls();
-      setPayrolls(payrollsData.PayrollInfo|| []);
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIPayroll.getAllPayrolls(params);
+      setPayrolls(response.PayrollInfo || []);
+      setTotalCount(response.Pagination.total_count || 0);
+      setCurrentPage(response.Pagination.page || 1);
+      setPerPage(response.Pagination.per_page || 10);
+      setIsLoading(false);
     } catch (error) {
-
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    fetchPayrolls();
+  }, [currentPage, per_page, searchQuery]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -48,12 +61,7 @@ const PayrollList = () => {
     };
 
     fetchEmployees();
-    fetchPayrolls();
   }, []);
-
-  const handleEmployeeChange = (e) => {
-    setSelectedEmployee(e.target.value);
-  };
 
   const handleMonthChange = (e) => {
     setSelectedMonth(e.target.value);
@@ -82,7 +90,7 @@ const PayrollList = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-5 shadow-md rounded-md mb-5">
         <div className="flex-grow mr-5 mb-5 md:mb-0">
           <label htmlFor="employee" className="block text-sm text-gray-800 mb-1">Employee</label>
-          <select id="employee" value={selectedEmployee} onChange={handleEmployeeChange} className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+          <select id="employee" className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
             {employees.map((employee) => (
               <option key={employee.id} value={employee.username}>
                 {`${employee.first_name} ${employee.last_name}`}
@@ -108,7 +116,7 @@ const PayrollList = () => {
           <div className="flex justify-between mb-4">
             <label className="flex items-center">
               Show
-              <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+              <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
@@ -117,7 +125,7 @@ const PayrollList = () => {
               entries
             </label>
             <div className="flex justify-end">
-              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
           </div>
           <div className="overflow-x-auto mb-4">
@@ -143,14 +151,13 @@ const PayrollList = () => {
                   </tr>
                 ) : (
                   paginatedPayrolls.map((payroll) => {
-                    const employee = employees.find(e => e.id === payroll.employee_id);
                     return (
                       <tr key={payroll.payroll_id}
                           className="hover:bg-gray-100">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
                           <div>
-                            <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Not Found'}</span>
-                            <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
+                            <span>{payroll.full_name}</span>
+                            <span className="text-xs text-gray-500 block">{payroll.employee_email}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payslip_type}</td>
@@ -179,11 +186,11 @@ const PayrollList = () => {
             </table>
           </div>
           <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, payrolls.length)} of {payrolls.length} records</span>
+          <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
             <div className="flex justify-end">
               <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={Math.ceil(total_count / per_page)}
                 onPageChange={handlePageChange}
               />
             </div>

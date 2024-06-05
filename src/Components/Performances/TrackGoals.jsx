@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { APIPerformance } from '@/Apis/APIPerformance';
 import ReactStars from 'react-stars';
 import { Dialog, Transition } from '@headlessui/react';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const TrackGoals = () => {
   const navigate = useNavigate();
@@ -26,42 +26,52 @@ const TrackGoals = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [description, setDescription] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(goals.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedGoals = getPaginatedData(goals, currentPage, perPage);
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
 
-  useEffect(() => {
-    fetchGoalTypes();
-    fetchGoals();
-  }, []);
+  const paginatedGoals = getPaginatedData(goals, currentPage, per_page);
+
+  const fetchGoals = async () => {
+    setIsLoading(true);
+    try {
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIPerformance.viewAllGoals(params);
+      setGoals(response.goals || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
+      setIsLoading(false);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchGoalTypes = async () => {
     try {
       const response = await APIPerformance.viewAllGoalTypes();
       setGoalTypes(response.goalTypes || []);
     } catch (error) {
-
     }
   };
 
-  const fetchGoals = async () => {
-    setIsLoading(true);
-    try {
-      const response = await APIPerformance.viewAllGoals();
-      setGoals(response.goals);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    fetchGoals();
+    fetchGoalTypes();
+  }, [currentPage, per_page, searchQuery]);
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -217,7 +227,7 @@ const TrackGoals = () => {
       <div className="flex justify-between items-center mb-5 p-5">
         <div className="flex items-center">
           <span>Show</span>
-            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
@@ -226,7 +236,7 @@ const TrackGoals = () => {
           <span>entries</span>
         </div>
         <div className="flex">
-          <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" />
+        <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </div>
       </div>
       <div className="overflow-x-auto mb-4 p-5">
@@ -244,36 +254,29 @@ const TrackGoals = () => {
             <tbody className="bg-white divide-y divide-gray-200">
             {isLoading ? (
                 <tr>
-                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading request loan data...</td>
+                  <td colSpan="5" className="text-center py-3 text-sm text-gray-500">Loading track goals data...</td>
                 </tr>
               ) : paginatedGoals.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No request loan data available.</td>
+                  <td colSpan="5" className="text-center py-3 text-sm text-gray-500">No track goals data available.</td>
                 </tr>
               ) : (
                 paginatedGoals.map((goal) => (
-                  <tr key={goal.id}
-                      onMouseEnter={() => handleMouseEnter(goal.id)}
-                      onMouseLeave={handleMouseLeave}
-                      className="hover:bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex items-center">
-                      {goal.goal_type_name}
-                      <button
-                        className="ml-6 text-blue-600 hover:text-blue-900 focus:outline-none"
-                        style={{ visibility: hoveredShiftId === goal.id ? 'visible' : 'hidden' }}
-                        onClick={() => handleViewDetailsClick(goal)}
-                      >
-                        <ArrowCircleRightIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        className="ml-2 text-red-600 hover:text-red-900 focus:outline-none"
-                        style={{ visibility: hoveredShiftId === goal.id ? 'visible' : 'hidden' }}
-                        onClick={() => handleDeleteClick(goal.id)}
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
+                  <tr key={goal.id} className="group hover:bg-gray-100">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex justify-between">
+                        <div>{goal.goal_type_name}</div>
+                        <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetailsClick(goal.id)}>
+                            <ArrowCircleRightIcon className="h-5 w-5" />
+                          </button>
+                          <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDeleteClick(goal.id)}>
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{goal.subject || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{goal.goal_type_name || ''}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{goal.start_date ? new Date(goal.start_date).toLocaleDateString('id-ID') : 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{goal.end_date ? new Date(goal.end_date).toLocaleDateString('id-ID') : 'N/A'}</td>
                     <td className="py-4 whitespace-nowrap text-sm text-gray-500">
@@ -291,11 +294,11 @@ const TrackGoals = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm px-4 my-2 flex justify-between items-center">
-        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, goals.length)} of {goals.length} records</span>
+          <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
           <div className="flex justify-end">
             <Pagination
               currentPage={currentPage}
-              totalPages={totalPages}
+              totalPages={Math.ceil(total_count / per_page)}
               onPageChange={handlePageChange}
             />
           </div>
@@ -367,3 +370,4 @@ const TrackGoals = () => {
 };
 
 export default TrackGoals;
+

@@ -3,8 +3,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { APIPayroll } from '@/Apis/APIPayroll';
 import { APIEmployees } from '@/Apis/APIEmployees';
-import Pagination from '../Pagination';
-import { getPaginatedData } from '@/Models/PaginationModel';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const RequestLoan = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -18,42 +18,55 @@ const RequestLoan = () => {
   const [employees, setEmployees] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const totalPages = Math.ceil(requestLoans.length / perPage);
+  const [per_page, setPerPage] = useState(10);
 
   const handlePageChange = (page) => {
-    if (page > 0 && page <= totalPages) {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
       setCurrentPage(page);
     }
   };
 
-  const paginatedRequestLoans = getPaginatedData(requestLoans, currentPage, perPage);
-
-  useEffect(() => {
-    fetchRequestLoans();
-    fetchEmployees();
-  }, []);
-
-  const fetchEmployees = async () => {
-    try {
-      const response = await APIEmployees.getAllEmployees();
-      setEmployees(response.employees || []);
-    } catch (error) {
-
-    }
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
   };
+
+  const paginatedRequestLoans = getPaginatedData(requestLoans, currentPage, per_page);
 
   const fetchRequestLoans = async () => {
     setIsLoading(true);
     try {
-      const response = await APIPayroll.getAllRequestLoans();
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIPayroll.getAllRequestLoans(params);
       setRequestLoans(response.data || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRequestLoans();
+  }, [currentPage, per_page, searchQuery]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await APIEmployees.getAllEmployees();
+        setEmployees(response.employees || []);
+      } catch (error) {
+  
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -219,7 +232,7 @@ const RequestLoan = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300" onChange={(e) => setPerPage(Number(e.target.value))}>
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
@@ -228,7 +241,7 @@ const RequestLoan = () => {
             entries
           </label>
           <div className="flex justify-end">
-              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
         </div>
         <div className="overflow-x-auto mb-4">
@@ -305,11 +318,11 @@ const RequestLoan = () => {
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-        <span>Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, requestLoans.length)} of {requestLoans.length} records</span>
+        <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
           <div className="flex justify-end">
             <Pagination
               currentPage={currentPage}
-              totalPages={totalPages}
+              totalPages={Math.ceil(total_count / per_page)}
               onPageChange={handlePageChange}
             />
           </div>
