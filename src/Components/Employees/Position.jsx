@@ -4,7 +4,7 @@ import { APIEmployees } from '@/Apis/APIEmployees';
 import Pagination from '../Pagination/Pagination';
 import { getPaginatedData } from '../Pagination/Pagination';
 
-const RolesPrivileges = () => {
+const Position = () => {
   const [showAddRole, setShowAddRole] = useState(false);
   const [selectedRoleData, setSelectedRoleData] = useState(null);
   const [hoveredRoleId, setHoveredRoleId] = useState(null);
@@ -107,7 +107,7 @@ const RolesPrivileges = () => {
           <div className="relative p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
-                {popupMode === 'edit' ? 'Edit' : 'Add'} Staff Role Information
+                {popupMode === 'edit' ? 'Edit' : 'Add'} Staff Position Information
               </h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">
@@ -116,7 +116,7 @@ const RolesPrivileges = () => {
                 <form className="w-full max-w-xl pt-6 pb-8 mb-4">
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roleName">
-                      Role Name *
+                      Position Name *
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -172,7 +172,7 @@ const RolesPrivileges = () => {
         </div>
       )}
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">List All Roles</h2>
+        <h2 className="text-lg font-semibold text-gray-700">List All Position</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewRoleClick}>Add New</button>
       </div>
       <div className="p-5">
@@ -195,7 +195,7 @@ const RolesPrivileges = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROLE NAME</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">POSITION NAME</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CREATED DATE</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UPDATED DATE</th>
               </tr>
@@ -203,7 +203,7 @@ const RolesPrivileges = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {isLoading ? (
                 <tr>
-                  <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading roles data...</td>
+                  <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading positions data...</td>
                 </tr>
               ) : paginatedRoles.map((role) => (
                 <tr key={role.id}
@@ -261,4 +261,4 @@ const RolesPrivileges = () => {
   );
 };
 
-export default RolesPrivileges;
+export default Position;

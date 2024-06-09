@@ -72,4 +72,14 @@ export const APIProjects = {
       throw new Error(error);
     }
   },
+
+  getProjectProgress: async () => {
+    try {
+      const response = await axiosInstance.get(`/projects/progress-bar`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 };
+

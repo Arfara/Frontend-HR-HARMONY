@@ -71,4 +71,14 @@ export const APITasks = {
       throw new Error(error);
     }
   },
+
+  getTaskProgress: async () => {
+    try {
+      const response = await axiosInstance.get('/tasks/progress-bar');
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 };
+

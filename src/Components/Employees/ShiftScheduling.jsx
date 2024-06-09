@@ -122,31 +122,45 @@ const ShiftScheduling = () => {
   };
 
   const handleDeleteTime = (day, timeType) => {
-    setEditingShift(prevState => ({
-      ...prevState,
-      times: {
-        ...prevState.times,
-        [day.toLowerCase()]: {
-          ...prevState.times[day.toLowerCase()],
-          [timeType]: ''
+    console.log('Before update:', day, timeType, editingShift.times);
+    setEditingShift(prevState => {
+      const dayKey = day.toLowerCase();
+      const dayTimes = prevState.times[dayKey] || { in_time: '', out_time: '' };
+      const newState = {
+        ...prevState,
+        times: {
+          ...prevState.times,
+          [dayKey]: {
+            ...dayTimes,
+            [timeType]: 'Holiday'
+          }
         }
-      }
-    }));
+      };
+      console.log('Updating state for:', dayKey, newState.times[dayKey]);
+      return newState;
+    });
   };
 
   const handleUpdate = async () => {
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    let updatedShift = {
+    const updatedShift = {
       shift_name: editingShift.shift_name,
       ...days.reduce((acc, day) => {
         const inTime = editingShift.times[day].in_time;
         const outTime = editingShift.times[day].out_time;
-        acc[`${day}_in_time`] = inTime && inTime !== '' ? moment(inTime, "HH:mm").format("hh.mm A") : 'Holiday';
-        acc[`${day}_out_time`] = outTime && outTime !== '' ? moment(outTime, "HH:mm").format("hh.mm A") : 'Holiday';
+        if (inTime === 'Holiday' || outTime === 'Holiday') {
+          acc[`${day}_in_time`] = 'Holiday';
+          acc[`${day}_out_time`] = 'Holiday';
+        } else {
+          acc[`${day}_in_time`] = inTime && moment(inTime, "HH:mm", true).isValid() ? `${moment(inTime, "HH:mm").format("HH:mm")}:00` : inTime;
+          acc[`${day}_out_time`] = outTime && moment(outTime, "HH:mm", true).isValid() ? `${moment(outTime, "HH:mm").format("HH:mm")}:00` : outTime;
+        }
         return acc;
       }, {})
     };
-
+  
+    console.log('Updated Shift:', updatedShift);
+  
     try {
       const response = await APIEmployees.updateOfficeShift(editingShift.id, updatedShift);
       if (response.code === 200) {
@@ -156,7 +170,11 @@ const ShiftScheduling = () => {
         alert(`Error: ${response.message}`);
       }
     } catch (error) {
-
+      if (error.response) {
+        alert(`Error: ${error.response.data.message || "An unexpected error occurred. Please try again."}`);
+      } else {
+        alert("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -190,16 +208,18 @@ const ShiftScheduling = () => {
     }
   
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    let newShift = {
+    const newShift = {
       shift_name: editingShift.shift_name,
       ...days.reduce((acc, day) => {
         const inTime = editingShift.times[day].in_time;
         const outTime = editingShift.times[day].out_time;
-        acc[`${day}_in_time`] = inTime && inTime !== '' ? moment(inTime, "HH:mm").format("HH:mm A") : 'Holiday';
-        acc[`${day}_out_time`] = outTime && outTime !== '' ? moment(outTime, "HH:mm").format("HH:mm A") : 'Holiday';
+        acc[`${day}_in_time`] = inTime && moment(inTime, "HH:mm", true).isValid() ? `${moment(inTime, "HH:mm").format("HH:mm")}:00` : 'Holiday';
+        acc[`${day}_out_time`] = outTime && moment(outTime, "HH:mm", true).isValid() ? `${moment(outTime, "HH:mm").format("HH:mm")}:00` : 'Holiday';
         return acc;
       }, {})
     };
+
+    console.log(newShift)
   
     try {
       const response = await APIEmployees.createOfficeShift(newShift);
