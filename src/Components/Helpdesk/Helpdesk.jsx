@@ -39,6 +39,18 @@ const Helpdesk = () => {
     }
   };
 
+  const fetchHelpdeskProgress = async () => {
+    try {
+      const response = await APIHelpdesk.fetchHelpdeskProgress();
+      if (response.code === 200 && !response.error) {
+        setTicketStatusData(response.ticket_status);
+        setTicketPriorityData(response.ticket_priority);
+      }
+    } catch (error) {
+      console.error('Failed to fetch helpdesk progress:', error);
+    }
+  };
+
   const fetchEmployees = async () => {
     try {
       const employeesData = await APIEmployees.getAllEmployees();
@@ -59,6 +71,7 @@ const Helpdesk = () => {
 
   useEffect(() => {
     fetchTickets();
+    fetchHelpdeskProgress();
     fetchEmployees();
     fetchDepartments();
   }, []);
@@ -448,3 +461,4 @@ const Helpdesk = () => {
 }
 
 export default Helpdesk;
+

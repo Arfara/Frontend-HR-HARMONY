@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
+import { Dialog, Transition } from '@headlessui/react';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import Pagination from '../Pagination/Pagination';
@@ -28,6 +29,7 @@ const Employees = () => {
   const [total_count, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [per_page, setPerPage] = useState(10);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= Math.ceil(total_count / per_page)) {
@@ -40,8 +42,10 @@ const Employees = () => {
     setCurrentPage(1);
   };
 
-  const paginatedEmployees = getPaginatedData(employees, currentPage, per_page);
+  const handleOpenUploadModal = () => setIsUploadModalOpen(true);
+  const handleCloseUploadModal = () => setIsUploadModalOpen(false);
 
+  const paginatedEmployees = getPaginatedData(employees, currentPage, per_page);
 
   const fetchEmployees = async () => {
     setIsLoading(true);
@@ -384,7 +388,10 @@ const Employees = () => {
       )}
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-700">List All Employees</h2>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
+        <div>
+          <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mr-2" onClick={handleOpenUploadModal}>Add Multiple</button>
+          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
+        </div>
       </div>
       <div className="p-5">
         <div className="flex justify-between mb-4">
@@ -488,6 +495,52 @@ const Employees = () => {
           </div>
         </div>
       )}
+      <Transition appear show={isUploadModalOpen} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={handleCloseUploadModal}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <div className="flex justify-between items-center mb-5">
+                  <h4 className="text-lg font-semibold">Upload Employee Data</h4>
+                  <button onClick={handleCloseUploadModal} className="text-black">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <p className="mb-5">Please upload the employee data in Excel format.</p>
+                <input type="file" accept=".xlsx" />
+                <div className="mt-4 flex justify-end">
+                  <button type="button" onClick={handleCloseUploadModal} className="bg-gray-500 text-white px-4 py-2 mr-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-50">
+                    Cancel
+                  </button>
+                  <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Upload
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };

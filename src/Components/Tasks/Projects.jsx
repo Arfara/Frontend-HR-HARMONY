@@ -10,6 +10,7 @@ import { APIClients } from '@/Apis/APIClients';
 const Projects = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
+  const [projectProgress, setProjectProgress] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [clients, setClients] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -38,6 +39,15 @@ const Projects = () => {
     }
   };
 
+  const fetchProjectProgress = async () => {
+    try {
+      const response = await APIProjects.getProjectProgress();
+      setProjectProgress(response.project_status || []);
+    } catch (error) {
+
+    }
+  };
+
   const fetchDepartments = async () => {
     try {
       const response = await APICoreHR.getAllDepartments();
@@ -60,6 +70,7 @@ const Projects = () => {
     fetchProjects();
     fetchDepartments();
     fetchClient();
+    fetchProjectProgress();
   }, []);
 
   const handleChange = (e) => {
@@ -206,7 +217,7 @@ const Projects = () => {
             <div className="flex items-center">
               <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">10</p>
+                <p className="font-bold text-xl">{projectProgress.Completed}</p>
                 <p className="text-sm">Total Completed</p>
               </div>
             </div>
@@ -217,7 +228,7 @@ const Projects = () => {
             <div className="flex items-center">
               <RefreshIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">3</p>
+                <p className="font-bold text-xl">{projectProgress.In_Progress}</p>
                 <p className="text-sm">Total In Progress</p>
               </div>
             </div>
@@ -228,7 +239,7 @@ const Projects = () => {
             <div className="flex items-center">
               <PlayIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">5</p>
+                <p className="font-bold text-xl">{projectProgress.Not_Started}</p>
                 <p className="text-sm">Total Not Started</p>
               </div>
             </div>
@@ -239,8 +250,8 @@ const Projects = () => {
             <div className="flex items-center">
               <PauseIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">1</p>
-                <p className="text-sm">Total On Hold</p>
+                <p className="font-bold text-xl">{projectProgress.Cancelled}</p>
+                <p className="text-sm">Total Cancelled</p>
               </div>
             </div>
           </div>

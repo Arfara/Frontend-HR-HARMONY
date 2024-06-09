@@ -4,7 +4,7 @@ import { FaCalendar, FaUserClock, FaClipboardList, FaClock } from 'react-icons/f
 import './EmployeesRouter.css';
 import Employees from './Employees';
 import EmployeesExit from './EmployeesExit';
-import RolesPrivileges from './RolesPrivileges';
+import Position from './Position';
 import ShiftScheduling from './ShiftScheduling';
 import ExitType from './ExitType';
 import EmployeeDetails from './EmployeeDetails';
@@ -21,9 +21,9 @@ const EmployeesRouter = () => {
               <span>Employees</span>
             </div>
           
-            <div className="feature" onClick={() => navigate('/employees/roles-privileges')}>
+            <div className="feature" onClick={() => navigate('/employees/position')}>
               <FaUserClock className="icon" />
-              <span>Roles & Privileges</span>
+              <span>Position</span>
             </div>
             
             <div className="feature" onClick={() => navigate('/employees/shift-scheduling')}>
@@ -39,7 +39,7 @@ const EmployeesRouter = () => {
 
           <Routes>
               <Route path="staff-list" element={< Employees />} />
-              <Route path="roles-privileges" element={< RolesPrivileges />} />
+              <Route path="position" element={< Position />} />
               <Route path="shift-scheduling" element={< ShiftScheduling />} />
               <Route path="employees-exit" element={< EmployeesExit />} />
               <Route path="exit-type" element={< ExitType />} />

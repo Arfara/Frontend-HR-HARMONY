@@ -13,6 +13,7 @@ const TasksList = () => {
   const [selectedProject, setSelectedProject] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [task_status, setTaskStatus] = useState({});
   const [projects, setProjects] = useState([]);
   const [description, setDescription] = useState('');
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -46,16 +47,24 @@ const TasksList = () => {
   const fetchTasks = async () => {
     try {
       const response = await APITasks.getAllTasks();
-      setTasks(response.tasks);
+      setTasks(response.tasks || []);
     } catch (error) {
-
     }
   };
 
+  const fetchTaskProject = async () => {
+    try {
+      const response = await APITasks.getTaskProgress();
+      setTaskStatus(response.task_status);
+  } catch (error) {
+  }
+};
+
   useEffect(() => {
     fetchTasks();
+    fetchTaskProject();
   }, []);
-  
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -165,7 +174,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">5</p>
+                <p className="font-bold text-xl">{task_status.Completed}</p>
                 <p className="text-sm">Total Completed</p>
               </div>
             </div>
@@ -176,7 +185,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <RefreshIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">4</p>
+                <p className="font-bold text-xl">{task_status.In_Progress}</p>
                 <p className="text-sm">Total In Progress</p>
               </div>
             </div>
@@ -187,7 +196,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <PlayIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">8</p>
+                <p className="font-bold text-xl">{task_status.Not_Started}</p>
                 <p className="text-sm">Total Not Started</p>
               </div>
             </div>
@@ -198,8 +207,8 @@ const TasksList = () => {
             <div className="flex items-center">
               <PauseIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">2</p>
-                <p className="text-sm">Total On Hold</p>
+                <p className="font-bold text-xl">{task_status.Cancelled}</p>
+                <p className="text-sm">Total Cancelled</p>
               </div>
             </div>
           </div>

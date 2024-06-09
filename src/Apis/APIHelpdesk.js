@@ -73,5 +73,14 @@ export const APIHelpdesk = {
       toast.error("Error occurred while deleting helpdesk.");
       throw new Error(error);
     }
+  },
+
+  getHelpdeskProgress: async () => {
+    try {
+      const result = await axiosInstance.get('/helpdesks/progress-bar');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 };

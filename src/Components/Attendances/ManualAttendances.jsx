@@ -7,6 +7,7 @@ import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import Pagination from '../Pagination/Pagination';
 import { getPaginatedData } from '../Pagination/Pagination';
+import moment from 'moment';
 
 const initialNewAttendanceState = {
   employee_id: '',
@@ -102,8 +103,12 @@ const ManualAttendances = () => {
 
     const dataToSend = {
       ...newAttendance,
-      employee_id: parseInt(newAttendance.employee_id, 10)
+      employee_id: parseInt(newAttendance.employee_id, 10),
+      in_time: moment(newAttendance.in_time, "HH:mm").format("HH:mm:ss"),
+      out_time: moment(newAttendance.out_time, "HH:mm").format("HH:mm:ss")
     };
+
+    console.log(dataToSend)
 
     try {
       const response = await APIAttendance.createAttendance(dataToSend);
@@ -130,6 +135,8 @@ const ManualAttendances = () => {
     const dataToUpdate = {
       ...currentEdit,
       employee_id: parseInt(currentEdit.employee_id, 10),
+      in_time: moment(currentEdit.in_time, "HH:mm").format("HH:mm:ss"),
+      out_time: moment(currentEdit.out_time, "HH:mm").format("HH:mm:ss")
     };
   
     console.log(dataToUpdate);
@@ -236,6 +243,9 @@ const ManualAttendances = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Time</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Out Time</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Hours</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Early Leaving</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Late</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -263,10 +273,17 @@ const ManualAttendances = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.designation_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.attendance_date}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.in_time}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.out_time}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.total_work}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.early_leaving}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.late}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${attendance.status === 'Absent' ? 'bg-red-200 text-red-800' : attendance.status === 'Present' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
+                          {attendance.status}
+                        </span>
+                      </td>
                     </tr>
                   ))
                 )}

@@ -22,8 +22,8 @@ const SideBarData = [
                 path: "/employees/staff-list"
             },
             {
-                title: "Roles & Privileges",
-                path: "/employees/roles-privileges"
+                title: "Position",
+                path: "/employees/position"
             },
             {
                 title: "Shift Scheduling",
