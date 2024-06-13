@@ -71,13 +71,13 @@ const TrainingSessions = () => {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-              const trainersData = await APITraining.viewAllTrainers();
+              const trainersData = await APITraining.viewAllTrainersNonPagination();
               setTrainers(trainersData.data);
       
-              const trainingSkillsData = await APITraining.viewAllTrainingSkills();
+              const trainingSkillsData = await APITraining.viewAllTrainingSkillsNonPagination();
               setTrainingSkills(trainingSkillsData.data);
       
-              const employeesData = await APIEmployees.getAllEmployees();
+              const employeesData = await APIEmployees.getAllEmployeesNonPagination();
               setEmployees(employeesData.employees);
             } catch (error) {
       

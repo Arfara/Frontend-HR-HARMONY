@@ -29,6 +29,15 @@ export const APICoreHR = {
     }
   },
 
+  getAllDepartmentsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/departments/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   getDepartmentById: async (id) => {
     try {
       const result = await axiosInstance.get(`/departments/${id}`, {
@@ -92,6 +101,15 @@ export const APICoreHR = {
       const result = await axiosInstance.get('/designations', {
         params,
       });
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  getAllDesignationsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/designations/non-pagination');
       return result.data;
     } catch (error) {
       throw new Error(error);

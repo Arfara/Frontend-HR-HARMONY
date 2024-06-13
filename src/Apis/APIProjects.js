@@ -15,6 +15,15 @@ export const APIProjects = {
     }
   },
 
+  getAllProjectsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/projects/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   createProject: async (projectData) => {
     try {
       const response = await axiosInstance.post('/projects', projectData, {

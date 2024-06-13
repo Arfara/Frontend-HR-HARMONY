@@ -55,7 +55,7 @@ const Designation = () => {
     const fetchDepartments = async () => {
       setIsLoading(true);
       try {
-        const data = await APICoreHR.getAllDepartments();
+        const data = await APICoreHR.getAllDepartmentsNonPagination();
         setDepartments(data.departments || []);
       } catch (error) {
 

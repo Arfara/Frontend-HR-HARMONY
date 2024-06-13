@@ -28,7 +28,7 @@ const TaskDetails = () => {
     const fetchProjects = async () => {
       try {
         const response = await APIProjects.getAllProjects();
-        setProjects(response.projects || []);
+        setProjects(response.Projects || []);
       } catch (error) {
 
       }
@@ -36,7 +36,7 @@ const TaskDetails = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await APIEmployees.getAllEmployees();
+        const response = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(response.employees || []);
       } catch (error) {
 
@@ -245,53 +245,6 @@ const TaskDetails = () => {
     setTask({ ...task, notes: updatedNotes });
   };
 
-  const PostANoteTab = ({ notes }) => {
-    const [newNote, setNewNote] = useState('');
-
-    const handlePostNote = () => {
-      const newNoteToAdd = {
-        id: notes.length + 1,
-        author: 'Current User',
-        content: newNote,
-        timestamp: 'Just now'
-      };
-      setTask({ ...task, notes: [...notes, newNoteToAdd] });
-      setNewNote('');
-    };
-
-    return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Post A Note</h3>
-        </div>
-        {notes && notes.length > 0 ? (
-          <ul>
-            {notes.map(note => (
-              <li key={note.id}>{note.note_text}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No notes available.</p>
-        )}
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={newNote}
-            onChange={(e) => setNewNote(e.target.value)}
-            placeholder="Post a Note..."
-            className="flex-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-          />
-          <button
-            onClick={handlePostNote}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-          >
-            +
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap -mx-3">
@@ -365,13 +318,11 @@ const TaskDetails = () => {
               <div className="flex space-x-2 mb-4">
                 <button onClick={() => setActiveTab('overview')} className={`px-4 py-2 ${activeTab === 'overview' ? 'bg-gray-200' : ''}`}>OVERVIEW</button>
                 <button onClick={() => setActiveTab('edit')} className={`px-4 py-2 ${activeTab === 'edit' ? 'bg-gray-200' : ''}`}>EDIT</button>
-                <button onClick={() => setActiveTab('postANote')} className={`px-4 py-2 ${activeTab === 'postANote' ? 'bg-gray-200' : ''}`}>POST A NOTE</button>
               </div>
             </div>
             <div className="p-4">
               {activeTab === 'overview' && task && <OverviewTab task={task} />}
               {activeTab === 'edit' && task && <EditTab task={task} setTask={setTask} />}
-              {activeTab === 'postANote' && <PostANoteTab notes={task?.notes} />}
             </div>
           </div>
         </div>

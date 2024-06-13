@@ -62,7 +62,7 @@ const TrackGoals = () => {
 
   const fetchGoalTypes = async () => {
     try {
-      const response = await APIPerformance.viewAllGoalTypes();
+      const response = await APIPerformance.viewAllGoalTypesNonPagination();
       setGoalTypes(response.goalTypes || []);
     } catch (error) {
     }

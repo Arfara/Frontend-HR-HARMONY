@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import Login from './Components/Login/Login'
 import ForgetPassword from './Components/ForgetPassword/ForgetPassword'
 import LandingPage from './Components/LandingPage/LandingPage';
@@ -19,7 +20,6 @@ import TrainingRouter from './Components/Training/TrainingRouter';
 import Helpdesk from './Components/Helpdesk/Helpdesk';
 import TicketDetails from './Components/Helpdesk/TicketDetails';
 import ClientList from './Components/ManageClient/ClientList';
-import ClientDetails from './Components/ManageClient/ClientDetails';
 import LeaveRouter from './Components/LeaveRequest/LeaveRouter';
 import { AuthService } from '../src/services/AuthService';
 
@@ -69,7 +69,6 @@ function DashboardLayout() {
                 <Route path="/helpdesk/ticket-details/:id" element={<TicketDetails />} />
                 <Route path="/leave/*" element={<LeaveRouter />} />
                 <Route path="/client-list" element={<ClientList />} />
-                <Route path="/client-list/client-details/:id" element={<ClientDetails />} />
                 </>
             ) : (
                 <Route path="*" element={<Navigate replace to="/login" />} />

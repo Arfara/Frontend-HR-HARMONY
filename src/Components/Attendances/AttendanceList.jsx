@@ -1,32 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { APIAttendance } from '@/Apis/APIAttendance';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const AttendanceList = () => {
-  const attendanceData = [
-    {
-      id: 1,
-      employee: 'Fakhrity Hikmawan',
-      email: 'fakhrityhikmawan@gmail.com',
-      date: '2024-03-14',
-      status: 'Absent',
-      clockIn: '00:00',
-      clockOut: '00:00',
-      late: '00:00',
-      earlyLeaving: '00:00',
-      totalWork: '00:00'
-    },
-    {
-      id: 2,
-      employee: 'Arfara Yema Samgusdian',
-      email: 'arfarayemasamgsudian@gmail.com',
-      date: '2024-03-14',
-      status: 'Present',
-      clockIn: '03:15 AM',
-      clockOut: '00:00',
-      late: '00:00',
-      earlyLeaving: '00:00',
-      totalWork: '00:00'
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [per_page, setPerPage] = useState(10);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
+      setCurrentPage(page);
     }
-  ];
+  };
+
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedAttendanceData = getPaginatedData(attendanceData, currentPage, per_page);
+
+  const fetchData = async () => {
+    try {
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIAttendance.getAllAttendances(params);
+      setAttendanceData(response.data);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, per_page, searchQuery]);
 
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
@@ -37,7 +50,8 @@ const AttendanceList = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
+              <option value="5">5</option>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -63,37 +77,47 @@ const AttendanceList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {attendanceData.map((data) => (
-                <tr key={data.id} className="hover:bg-gray-100">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <span>{data.employee}</span>
-                    <span className="text-xs text-gray-500 block">{data.email}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.clockIn}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.clockOut}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.late}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.earlyLeaving}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.totalWork}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${data.status === 'Present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {data.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+            {isLoading ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading attendance data...</td>
+                  </tr>
+                ) : paginatedAttendanceData.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
+                  </tr>
+                ) : (
+                  paginatedAttendanceData.map((data) => (
+                    <tr key={data.id} className="group hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div className="flex justify-between">
+                          <div>{data.full_name_employee}</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.attendance_date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.in_time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.out_time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.total_work}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.early_leaving}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.late}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-5000">
+                        <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${data.status === 'Absent' ? 'bg-red-200 text-red-800' : data.status === 'Present' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
+                          {data.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
             </tbody>
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-          Showing 1 to 2 of 2 records
-          <div>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-              Previous
-            </button>
-            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-              Next
-            </button>
+          <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(total_count / per_page)}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
@@ -102,3 +126,4 @@ const AttendanceList = () => {
 };
 
 export default AttendanceList;
+

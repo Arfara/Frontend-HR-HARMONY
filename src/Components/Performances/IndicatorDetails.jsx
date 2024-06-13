@@ -26,7 +26,7 @@ const IndicatorDetails = () => {
 
         const fetchDesignations = async (designationId) => {
             try {
-                const response = await APICoreHR.getAllDesignations();
+                const response = await APICoreHR.getAllDesignationsNonPagination();
                 if (response && response.designations) {
                     const isDesignationIncluded = response.designations.some(designation => designation.id === designationId);
                     const updatedDesignations = isDesignationIncluded ? response.designations : [{id: designationId, designation_name: detail.designation_name}, ...response.designations];

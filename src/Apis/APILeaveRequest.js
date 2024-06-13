@@ -28,6 +28,15 @@ export const APILeaveRequest = {
     }
   },
 
+  getAllLeaveRequestTypesNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/leave_request_types');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   getLeaveRequestTypeById: async (id) => {
     try {
       const result = await axiosInstance.get(`/leave_request_types/${id}`, {

@@ -3,6 +3,25 @@ import { toast } from 'react-toastify';
 import axiosInstance from '@/configs/axiosInstance';
 
 export const APIAttendance  = {
+  getEmployeeAttendanceReport: async (employeeId, monthYear) => {
+    try {
+      const response = await axiosInstance.get(`/admin/employee_attendance_report`, {
+        params: {
+          employee_id: employeeId,
+          month_year: monthYear,
+        },
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+        responseType: 'blob',
+      });
+      return response;
+    } catch (error) {
+      toast.error("Error fetching attendance report.");
+      throw new Error(error);
+    }
+  },
+
   createAttendance: async (attendanceData) => {
     try {
       const result = await axiosInstance.post('/attendances', attendanceData, {

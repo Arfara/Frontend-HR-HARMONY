@@ -29,6 +29,15 @@ export const APITraining = {
     }
   },
 
+  viewAllTrainersNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/trainers/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   viewTrainerById: async (id) => {
     try {
       const result = await axiosInstance.get(`/trainers/${id}`, {
@@ -98,6 +107,15 @@ export const APITraining = {
     }
   },
 
+  viewAllTrainingSkillsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/training_skills/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   viewTrainingSkillById: async (id) => {
     try {
       const result = await axiosInstance.get(`/training_skills/${id}`, {
@@ -161,6 +179,15 @@ export const APITraining = {
       const result = await axiosInstance.get('/trainings', {
         params,
       });
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  viewAllTrainingsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/trainings/non-pagination');
       return result.data;
     } catch (error) {
       throw new Error(error);

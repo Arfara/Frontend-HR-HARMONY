@@ -24,6 +24,15 @@ export const APIClients = {
     }
   },
 
+  getAllClientsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/admin/clients/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   getClientById: async (id) => {
     try {
       const response = await axiosInstance.get(`/admin/clients/${id}`);

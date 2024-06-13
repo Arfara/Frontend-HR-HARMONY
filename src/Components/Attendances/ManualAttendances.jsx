@@ -47,7 +47,6 @@ const ManualAttendances = () => {
   };
 
   const paginatedAttendances = getPaginatedData(attendances, currentPage, per_page);
-  console.log(attendances)
 
   const fetchAttendances = async () => {
     setIsLoading(true);
@@ -70,7 +69,7 @@ const ManualAttendances = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await APIEmployees.getAllEmployees();
+        const response = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(response.employees || []);
       } catch (error) {
         setIsLoading(false);
@@ -251,11 +250,11 @@ const ManualAttendances = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {isLoading ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendance data...</td>
+                    <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading attendance data...</td>
                   </tr>
                 ) : paginatedAttendances.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
+                    <td colSpan="8" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
                   </tr>
                 ) : (
                   paginatedAttendances.map((attendance) => (

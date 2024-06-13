@@ -58,7 +58,7 @@ const RequestLoan = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await APIEmployees.getAllEmployees();
+        const response = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(response.employees || []);
       } catch (error) {
   
