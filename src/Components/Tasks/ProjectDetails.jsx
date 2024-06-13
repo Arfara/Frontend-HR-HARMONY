@@ -49,7 +49,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await APICoreHR.getAllDepartments();
+        const response = await APICoreHR.getAllDepartmentsNonPagination();
         setDepartments(response.departments);
       } catch (error) {
 
@@ -58,7 +58,7 @@ const ProjectDetails = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await APIEmployees.getAllEmployees();
+        const response = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(response.data);
       } catch (error) {
 
@@ -72,7 +72,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await APIClients.getAllClients();
+        const response = await APIClients.getAllClientsNonPagination();
         setClients(response.data);
       } catch (error) {
 
@@ -268,65 +268,6 @@ const ProjectDetails = () => {
     );
   });
 
-  const PostANoteTab = () => {
-    const [notes, setNotes] = useState([
-      { id: 1, author: 'Super Admin', content: 'Bismillah', timestamp: '4 months ago' },
-      { id: 2, author: 'Super Admin', content: 'GO GO GO', timestamp: 'a month ago' }
-    ]);
-    const [newNote, setNewNote] = useState('');
-
-    const handlePostNote = () => {
-      const newNoteToAdd = {
-        id: notes.length + 1,
-        author: 'Current User',
-        content: newNote,
-        timestamp: 'Just now'
-      };
-      setNotes([...notes, newNoteToAdd]);
-      setNewNote('');
-    };
-
-    const handleDeleteNote = (noteId) => {
-      setNotes(notes.filter(note => note.id !== noteId));
-    };
-
-    return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Post A Note</h3>
-        </div>
-        {notes.map(note => (
-          <div key={note.id} className="flex items-center mb-4">
-            <img src="/path-to-avatar-image.jpg" alt="Avatar" className="rounded-full w-8 h-8 mr-3" />
-            <div className="flex-1">
-              <div className="font-semibold">{note.author}</div>
-              <div className="text-sm text-gray-500">{note.timestamp}</div>
-              <div>{note.content}</div>
-            </div>
-            <button onClick={() => handleDeleteNote(note.id)} className="text-red-500 hover:text-red-700">
-              Delete
-            </button>
-          </div>
-        ))}
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={newNote}
-            onChange={(e) => setNewNote(e.target.value)}
-            placeholder="Post a Note..."
-            className="flex-1 mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-          />
-          <button
-            onClick={handlePostNote}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-          >
-            +
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap -mx-3">
@@ -414,13 +355,11 @@ const ProjectDetails = () => {
               <div className="flex space-x-2 mb-4">
                 <button onClick={() => setActiveTab('overview')} className={`px-4 py-2 ${activeTab === 'overview' ? 'bg-gray-200' : ''}`}>OVERVIEW</button>
                 <button onClick={() => setActiveTab('edit')} className={`px-4 py-2 ${activeTab === 'edit' ? 'bg-gray-200' : ''}`}>EDIT</button>
-                <button onClick={() => setActiveTab('postANote')} className={`px-4 py-2 ${activeTab === 'postANote' ? 'bg-gray-200' : ''}`}>POST A NOTE</button>
               </div>
             </div>
             <div className="p-4">
               {activeTab === 'overview' && <OverviewTab project={projectDetails}/>}
               {activeTab === 'edit' && <EditTab project={projectDetails} />}
-              {activeTab === 'postANote' && <PostANoteTab />}
             </div>
           </div>
         </div>

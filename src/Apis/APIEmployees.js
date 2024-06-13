@@ -17,6 +17,23 @@ export const APIEmployees = {
     } 
   },
 
+  uploadMultipleEmployees: async (fileData) => {
+    const formData = new FormData();
+    formData.append("file", fileData);
+  
+    try {
+      const response = await axiosInstance.post('/admin/employees/multiple', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      toast.success("Employees uploaded successfully");
+      return response.data;
+    } catch (error) {
+      toast.error("Error occurred while uploading employees.");
+      throw new Error(error);
+    }
+  },
 
   createEmployee: async (employeeData) => {
       try {
@@ -38,6 +55,15 @@ export const APIEmployees = {
       const result = await axiosInstance.get('/admin/employees', {
         params,
       });
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  getAllEmployeesNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/admin/employees/non-pagination');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -110,6 +136,15 @@ export const APIEmployees = {
     }
   },
 
+  getRolesNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/roles/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   editRole: async (roleId, roleData) => {
     try {
       const result = await axiosInstance.put(`/roles/${roleId}`, roleData, {
@@ -166,6 +201,15 @@ export const APIEmployees = {
         throw new Error(error);
     }
   },
+
+  getOfficeShiftsNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/shifts/non-pagination');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
   
   updateOfficeShift: async (shiftId, updatedShift) => {
     try {
@@ -218,6 +262,15 @@ export const APIEmployees = {
       const result = await axiosInstance.get('/exits', {
         params,
       });
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  getAllExitTypesNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/exits/non-pagination');
       return result.data;
     } catch (error) {
       throw new Error(error);

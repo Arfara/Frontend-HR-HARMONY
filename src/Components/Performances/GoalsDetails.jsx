@@ -10,27 +10,27 @@ import { APITraining } from '@/Apis/APITraining';
 const GoalsDetails = () => {
     const { id } = useParams();
     const location = useLocation();
-    const [goal, setGoal] = useState(location.state?.goal || {});
-    const [initialGoal, setInitialGoal] = useState({});
+    const [data, setData] = useState(location.state?.data || {});
+    const [initialData, setInitialData] = useState({});
     const [activeTab, setActiveTab] = useState('Overview');
-    const [progress, setProgress] = useState(goal?.progress_bar || 0);
-    const [goalRating, setGoalRating] = useState(goal?.goal_rating || 0);
-    const [subject, setSubject] = useState(goal?.subject || '');
-    const [targetAchievement, setTargetAchievement] = useState(goal?.target_achievement || '');
-    const [startDate, setStartDate] = useState(goal?.start_date || '');
-    const [endDate, setEndDate] = useState(goal?.end_date || '');
-    const [status, setStatus] = useState(goal?.status || '');
-    const [description, setDescription] = useState(goal?.description || '');
+    const [progress, setProgress] = useState(data?.progress_bar || 0);
+    const [goalRating, setGoalRating] = useState(data?.goal_rating || 0);
+    const [subject, setSubject] = useState(data?.subject || '');
+    const [targetAchievement, setTargetAchievement] = useState(data?.target_achievement || '');
+    const [startDate, setStartDate] = useState(data?.start_date || '');
+    const [endDate, setEndDate] = useState(data?.end_date || '');
+    const [status, setStatus] = useState(data?.status || '');
+    const [description, setDescription] = useState(data?.description || '');
 
     const [goalTypes, setGoalTypes] = useState([]);
     const [projects, setProjects] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [trainings, setTrainings] = useState([]);
 
-    const [selectedGoalType, setSelectedGoalType] = useState(goal?.goal_type_id || '');
-    const [selectedProjectId, setSelectedProjectId] = useState(goal?.project_id || '');
-    const [selectedTaskId, setSelectedTaskId] = useState(goal?.task_id || '');
-    const [selectedTrainingId, setSelectedTrainingId] = useState(goal?.training_id || '');
+    const [selectedGoalType, setSelectedGoalType] = useState(data?.goal_type_id || '');
+    const [selectedProjectId, setSelectedProjectId] = useState(data?.project_id || '');
+    const [selectedTaskId, setSelectedTaskId] = useState(data?.task_id || '');
+    const [selectedTrainingId, setSelectedTrainingId] = useState(data?.training_id || '');
     
     useEffect(() => {
         fetchGoal();
@@ -48,8 +48,8 @@ const GoalsDetails = () => {
             const response = await APIPerformance.viewGoalById(id);
             if (response && response.data) {
                 const { data } = response;
-                setGoal(data || {});
-                setInitialGoal(data || {});
+                setData(data || {});
+                setInitialData(data || {});
                 setSelectedGoalType(data.goal_type_id || '');
                 setProgress(data.progress_bar || 0);
                 setGoalRating(data.goal_rating || 0);
@@ -69,13 +69,13 @@ const GoalsDetails = () => {
     };
 
     const fetchGoalTypes = async () => {
-        const response = await APIPerformance.viewAllGoalTypes();
+        const response = await APIPerformance.viewAllGoalTypesNonPagination();
         setGoalTypes(response.goalTypes || []);
     };
 
     const fetchProjects = async () => {
-        const response = await APIProjects.getAllProjects();
-        setProjects(response.projects || []);
+        const response = await APIProjects.getAllProjectsNonPagination();
+        setProjects(response.Projects || []);
     };
 
     const fetchTasks = async () => {
@@ -84,7 +84,7 @@ const GoalsDetails = () => {
     };
 
     const fetchTrainings = async () => {
-        const response = await APITraining.viewAllTrainings();
+        const response = await APITraining.viewAllTrainingsNonPagination();
         setTrainings(response.data || []);
     };
 
@@ -153,8 +153,8 @@ const GoalsDetails = () => {
                 <h2 className="text-xl font-bold mb-4">Goals Details</h2>
                 <ul>
                     {Object.entries({
-                        'Goal Type': initialGoal.goal_type_name || '',
-                        'progress': initialGoal.progress_bar !== undefined && initialGoal.progress_bar !== null ? `${initialGoal.progress_bar}%` : '',
+                        'Goal Type': initialData.goal_type_name || '',
+                        'progress': initialData.progress_bar !== undefined && initialData.progress_bar !== null ? `${initialData.progress_bar}%` : '',
                     }).map(([key, value]) => (
                         <li key={key} className="mb-2 border-b">
                             <span className="font-bold">{key}: </span>{value}
@@ -231,7 +231,7 @@ const GoalsDetails = () => {
                                 </div>
                                 <div className="flex items-center">
                                     <span className="w-1/3 font-bold">Progress:</span>
-                                    <span className="w-2/3">{initialGoal.progress_bar !== undefined && initialGoal.progress_bar !== null ? `${initialGoal.progress_bar}%` : ''}</span>
+                                    <span className="w-2/3">{initialData.progress_bar !== undefined && initialData.progress_bar !== null ? `${initialData.progress_bar}%` : ''}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="w-1/3 font-bold">Start Date:</span>
@@ -246,15 +246,15 @@ const GoalsDetails = () => {
                             <div className="space-y-4">
                                 <div className="flex items-center">
                                     <span className="w-1/3 font-bold">Project:</span>
-                                    <span className="w-2/3">{projects.find(p => p.id === goal?.project_id)?.title || '-'}</span>
+                                    <span className="w-2/3">{projects.find(p => p.id === data?.project_id)?.title || '-'}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="w-1/3 font-bold">Task:</span>
-                                    <span className="w-2/3">{tasks.find(t => t.id === goal?.task_id)?.title || '-'}</span>
+                                    <span className="w-2/3">{tasks.find(t => t.id === data?.task_id)?.title || '-'}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="w-1/3 font-bold">Training Sessions:</span>
-                                    <span className="w-2/3">{trainings.find(t => t.id === goal?.training_id)?.training_skill || '-'}</span>
+                                    <span className="w-2/3">{trainings.find(t => t.id === data?.training_id)?.training_skill || '-'}</span>
                                 </div>
                             </div>
                             <h2 className="text-lg font-semibold mt-6 mb-4">Description</h2>

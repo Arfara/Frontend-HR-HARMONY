@@ -25,7 +25,7 @@ const AppraisalDetails = () => {
 
         const fetchEmployees = async (employeeId) => {
             try {
-                const response = await APIEmployees.getAllEmployees();
+                const response = await APIEmployees.getAllEmployeesNonPagination();
                 if (response && response.employees) {
                     const isEmployeeIncluded = response.employees.some(employee => employee.id === employeeId);
                     const updatedEmployees = isEmployeeIncluded ? response.employees : [{id: employeeId, employee_name: detail.employee_name}, ...response.employees];

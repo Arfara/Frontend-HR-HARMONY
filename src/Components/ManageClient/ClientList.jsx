@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { ArrowCircleRightIcon, TrashIcon } from '@heroicons/react/solid';
+import { TrashIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import Header from "../Header/Header";
 import { APIClients } from '@/Apis/APIClients';
@@ -50,7 +50,7 @@ const ClientList = () => {
             setTotalCount(response.pagination.total_count || 0);
             setCurrentPage(response.pagination.page || 1);
             setPerPage(response.pagination.per_page || 10);
-            } catch (error) {
+        } catch (error) {
         }
         setIsLoading(false);
     };
@@ -188,13 +188,13 @@ const ClientList = () => {
                                     Profile Picture
                                 </label>
                                 <div className="flex items-center justify-center w-full">
-                                    <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-blue-300 group">
+                                    <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-blue-300 group" >
                                         <div className="flex flex-col items-center justify-center pt-7">
                                             <svg className="w-10 h-10 text-blue-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                             </svg>
                                             <p className="lowercase text-sm text-gray-400 group-hover:text-blue-600 pt-1 tracking-wider">Select a photo</p>
-                                            <input type="file" id="profile_picture" name="profile_picture" className="hidden" />
+                                            <input type="file" id="profile_picture" name="profile_picture" className="hidden" disabled />
                                         </div>
                                     </label>
                                 </div>
@@ -259,9 +259,6 @@ const ClientList = () => {
                                         <div className="flex justify-between">
                                             <span>{client.full_name}</span>
                                             <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetailsClick(client.id)}>
-                                                    <ArrowCircleRightIcon className="h-5 w-5" />
-                                                </button>
                                                 <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDeleteClick(client.id)}>
                                                     <TrashIcon className="h-5 w-5" />
                                                 </button>

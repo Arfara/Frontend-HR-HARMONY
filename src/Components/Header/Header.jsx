@@ -33,10 +33,6 @@ const Header = () => {
         {showDropdown && (
           <div className="dropdown">
             <ul>
-              <li>
-                <FaCog className="dropdown-icon" />
-                Profile
-              </li>
               <li onClick={handleLogout}>
                 <FaSignOutAlt className="dropdown-icon" />
                 Logout

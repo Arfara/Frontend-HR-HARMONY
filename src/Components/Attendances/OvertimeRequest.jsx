@@ -59,7 +59,7 @@ const OvertimeRequest = () => {
     const fetchEmployees = async () => {
       setIsLoading(true);
       try {
-        const response = await APIEmployees.getAllEmployees();
+        const response = await APIEmployees.getAllEmployeesNonPagination();
         if (response.employees) {
           setEmployees(response.employees || []);
           setIsLoading(false);

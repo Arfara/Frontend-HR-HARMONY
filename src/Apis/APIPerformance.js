@@ -241,6 +241,15 @@ export const APIPerformance = {
     }
   },
 
+  viewAllGoalTypesNonPagination: async () => {
+    try {
+      const result = await axiosInstance.get('/goals_types');
+      return result.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   viewGoalTypeById: async (id) => {
     try {
       const result = await axiosInstance.get(`/goals_types/${id}`, {

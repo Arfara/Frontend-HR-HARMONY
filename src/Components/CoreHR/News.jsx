@@ -73,7 +73,7 @@ const News = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await APICoreHR.getAllDepartments();
+        const response = await APICoreHR.getAllDepartmentsNonPagination();
         setDepartments(response.departments || []);
       } catch (error) {
 

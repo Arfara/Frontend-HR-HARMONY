@@ -2,14 +2,12 @@ import React from 'react';
 import './TasksRouter.css';
 import Header from '../Header/Header';
 import TasksList from './TasksList';
-import TasksCalendar from './TasksCalendar';
 import Projects from './Projects';
 import TaskDetails from './TaskDetails';
 import ProjectDetails from './ProjectDetails';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { GrTasks } from 'react-icons/gr';
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import { FaCalendarCheck } from "react-icons/fa";
 
 const TasksRouter = () => {
   const navigate = useNavigate();
@@ -26,17 +24,11 @@ const TasksRouter = () => {
                     <AiOutlineFundProjectionScreen className='icon'/>
                     <span>Projects</span>
                 </div>
-
-                <div className='feature' onClick={() => navigate('/tasks/calendar')}>
-                    <FaCalendarCheck className='icon'/>
-                    <span>Calendar</span>
-                </div>
             </div>
 
             <Routes>
                 <Route path='tasks-list' element = {<TasksList/>}/>
                 <Route path='project-list' element = {<Projects/>}/>
-                <Route path='calendar' element = {<TasksCalendar/>}/>
                 <Route path='/task-details/:taskId' element={<TaskDetails/>}/>
                 <Route path='/project-details/:projectId' element={<ProjectDetails/>}/>
             </Routes>

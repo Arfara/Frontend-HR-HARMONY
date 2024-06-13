@@ -53,7 +53,7 @@ const PayrollList = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const employeesData = await APIEmployees.getAllEmployees();
+        const employeesData = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(employeesData.employees || []);
       } catch (error) {
 

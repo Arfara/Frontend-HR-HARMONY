@@ -102,7 +102,7 @@ const PerformanceIndicator = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await APICoreHR.getAllDesignations();
+        const response = await APICoreHR.getAllDesignationsNonPagination();
         setDesignations(response.designations || []);
       } catch (error) {
 

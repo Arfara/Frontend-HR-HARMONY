@@ -50,7 +50,7 @@ const Projects = () => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await APICoreHR.getAllDepartments();
+      const response = await APICoreHR.getAllDepartmentsNonPagination();
       setDepartments(response.departments || []);
     } catch (error) {
 
@@ -59,7 +59,7 @@ const Projects = () => {
 
   const fetchClient = async () => {
     try {
-      const response = await APIClients.getAllClients();
+      const response = await APIClients.getAllClientsNonPagination();
       setClients(response.data || []);
     } catch (error) {
 

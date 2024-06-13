@@ -101,10 +101,6 @@ const SideBarData = [
                 path: "/payroll/payslip-history"
             },
             {
-                title: "Advance Salary",
-                path: "/payroll/advance-salary"
-            },
-            {
                 title: "Request Loan",
                 path: "/payroll/request-loan"
             },
@@ -124,10 +120,6 @@ const SideBarData = [
             {
                 title:"Projects",
                 path:"/tasks/project-list"
-            },
-            {
-                title:"Calendar",
-                path:"/tasks/calendar"
             }
         ]
     },
@@ -167,18 +159,6 @@ const SideBarData = [
                 title: "New Opening",
                 path: "/recruitment/new-opening"
             },
-            {
-                title:"Candidates",
-                path:"/recruitment/candidates"
-            },
-            {
-                title:"Interviews",
-                path:"/recruitment/interviews"
-            },
-            {
-                title:"Promotions",
-                path:"/recruitment/promotions"
-            }
         ]   
     },
     {

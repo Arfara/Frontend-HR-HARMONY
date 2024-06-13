@@ -53,7 +53,7 @@ const Helpdesk = () => {
 
   const fetchEmployees = async () => {
     try {
-      const employeesData = await APIEmployees.getAllEmployees();
+      const employeesData = await APIEmployees.getAllEmployeesNonPagination();
       setEmployees(employeesData.employees || []);
     } catch (error) {
 
@@ -62,7 +62,7 @@ const Helpdesk = () => {
 
   const fetchDepartments = async () => {
     try {
-      const departmentsData = await APICoreHR.getAllDepartments();
+      const departmentsData = await APICoreHR.getAllDepartmentsNonPagination();
       setDepartments(departmentsData.departments || []);
     } catch (error) {
 

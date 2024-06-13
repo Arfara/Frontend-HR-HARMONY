@@ -58,10 +58,10 @@ const ManageLeaves = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const leaveTypesData = await APILeaveRequest.getAllLeaveRequestTypes();
+        const leaveTypesData = await APILeaveRequest.getAllLeaveRequestTypesNonPagination();
         setLeaveTypes(leaveTypesData.leave_request_types);
 
-        const employeesData = await APIEmployees.getAllEmployees();
+        const employeesData = await APIEmployees.getAllEmployeesNonPagination();
         setEmployees(employeesData.employees);
       } catch (error) {
 

@@ -6,6 +6,7 @@ import { APIEmployees } from '@/Apis/APIEmployees';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import Pagination from '../Pagination/Pagination';
 import { getPaginatedData } from '../Pagination/Pagination';
+import { toast } from 'react-toastify';
 
 const Employees = () => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const Employees = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [per_page, setPerPage] = useState(10);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handlePageChange = (page) => {
     if (page > 0 && page <= Math.ceil(total_count / per_page)) {
@@ -44,6 +47,31 @@ const Employees = () => {
 
   const handleOpenUploadModal = () => setIsUploadModalOpen(true);
   const handleCloseUploadModal = () => setIsUploadModalOpen(false);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+
+    setIsUploading(true);
+    const toastId = toast.loading("Uploading...");
+
+    try {
+      await APIEmployees.uploadMultipleEmployees(selectedFile);
+      toast.update(toastId, { render: "Upload successful!", type: "success", isLoading: false, autoClose: 5000 });
+      handleCloseUploadModal();
+      fetchEmployees();
+    } catch (error) {
+      toast.update(toastId, { render: "Failed to upload file.", type: "error", isLoading: false, autoClose: 5000 });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const paginatedEmployees = getPaginatedData(employees, currentPage, per_page);
 
@@ -70,7 +98,7 @@ const Employees = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await APIEmployees.getRoles();
+        const response = await APIEmployees.getRolesNonPagination();
         setRoles(response.roles || []);
       } catch (error) {
       }
@@ -78,7 +106,7 @@ const Employees = () => {
 
     const fetchOfficeShifts = async () => {
       try {
-        const response = await APIEmployees.getOfficeShifts();
+        const response = await APIEmployees.getOfficeShiftsNonPagination();
         setOfficeShifts(response.shifts || []);
       } catch (error) {
       }
@@ -86,7 +114,7 @@ const Employees = () => {
 
     const fetchDepartments = async () => {
       try {
-        const response = await APICoreHR.getAllDepartments();
+        const response = await APICoreHR.getAllDepartmentsNonPagination();
         setDepartments(response.departments || []);
       } catch (error) {
       }
@@ -94,7 +122,7 @@ const Employees = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await APICoreHR.getAllDesignations();
+        const response = await APICoreHR.getAllDesignationsNonPagination();
         setDesignations(response.designations || []);
       } catch (error) {
       }
@@ -376,7 +404,7 @@ const Employees = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
                 Profile Picture
               </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" />
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" disabled={true}/>
             </div>
           </div>
           <div className="flex justify-end bg-gray-200 px-4 py-3">
@@ -417,8 +445,8 @@ const Employees = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="relative px-6 py-3">
                   <span className="sr-only">Actions</span>
@@ -450,9 +478,13 @@ const Employees = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contact_number}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.gender}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.country}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.department}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${employee.is_active ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
+                        {employee.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
                     <td className="relative px-6 py-3">
                       <span className="sr-only">Actions</span>
                     </td>
@@ -527,13 +559,17 @@ const Employees = () => {
                   </button>
                 </div>
                 <p className="mb-5">Please upload the employee data in Excel format.</p>
-                <input type="file" accept=".xlsx" />
+                <input type="file" accept=".xlsx" onChange={handleFileChange} />
+                <p className="text-red-500 text-xs mt-2">
+                  If you don't have an employee data upload template, you can download it <a href="https://docs.google.com/spreadsheets/d/1NH_ls7u8g_x32WczLsRiAWSfEKrgv9xd/export?format=xlsx" className="underline text-blue-500 hover:text-blue-700">here</a>.
+                </p>
                 <div className="mt-4 flex justify-end">
                   <button type="button" onClick={handleCloseUploadModal} className="bg-gray-500 text-white px-4 py-2 mr-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-50">
                     Cancel
                   </button>
-                  <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Upload
+                  <button type="button" onClick={handleUpload} className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={isUploading}>
+                    {isUploading ? 'Uploading...' : 'Upload'}
                   </button>
                 </div>
               </div>
