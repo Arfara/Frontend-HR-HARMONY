@@ -13,7 +13,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const data = await APIDashboard.getDashboardData();
-        setDashboardData(data || {});
+        setDashboardData(data.dashboard || {});
       } catch (error) {
         setLoadingMessage("Failed to load data. Please try again.");
       }
