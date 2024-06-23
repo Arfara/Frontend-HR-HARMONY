@@ -47,7 +47,7 @@ const TrackGoals = () => {
   const fetchGoals = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPerformance.viewAllGoals(params);
       setGoals(response.goals || []);
       setTotalCount(response.pagination.total_count || 0);

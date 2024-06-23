@@ -11,7 +11,6 @@ const NewOpening = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [selectedDesignation, setSelectedDesignation] = useState('');
-  const [selectedGender, setSelectedGender] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedExperience, setSelectedExperience] = useState('');
   const [joblist, setJoblist] = useState([]);
@@ -73,7 +72,6 @@ const NewOpening = () => {
       number_of_position: parseInt(selectedNumberOfPosition, 10),
       is_publish: selectedStatus === 'Published',
       date_closing: selectedDateClosing,
-      gender: selectedGender,
       minimum_experience: selectedExperience,
       short_description: selectedShortDescription,
       long_description: selectedLongDescription
@@ -145,7 +143,6 @@ const NewOpening = () => {
               {job.is_publish ? 'Published' : 'Unpublished'}
             </span>
             <p className="text-sm text-gray-500 mt-4">Positions: {job.number_of_position}</p>
-            <p className="text-sm text-gray-500">Gender: {job.gender}</p>
           </div>
         </div>
         <div className="flex justify-between items-end">
@@ -255,22 +252,6 @@ const NewOpening = () => {
                     Closing Date*
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="closingDate" name="closingDate" type="date" value={selectedDateClosing} onChange={handleChange} />
-                </div>
-
-                <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
-                    Gender *
-                    </label>
-                    <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="gender"
-                    value={selectedGender}
-                    onChange={(e) => setSelectedGender(e.target.value)}
-                    >
-                    <option value="" disabled>Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    </select>
                 </div>
 
                 <div>

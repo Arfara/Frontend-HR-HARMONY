@@ -37,7 +37,7 @@ const EmployeesExit = () => {
 
   const fetchExitEmployees = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIEmployees.getAllEmployeeExits(params);
       setExitEmployees(response.ExitEmployees || []);
       setTotalCount(response.Pagination.total_count || 0);
