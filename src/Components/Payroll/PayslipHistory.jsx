@@ -31,7 +31,7 @@ const PayslipHistory = () => {
 
   const fetchPayrollHistory = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPayroll.getPayrollHistory(params);
       setPayrollHistory(response.payroll_info_list || []);
       setTotalCount(response.pagination.total_count || 0);

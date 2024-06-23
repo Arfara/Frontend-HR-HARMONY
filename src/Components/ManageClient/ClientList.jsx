@@ -44,7 +44,7 @@ const ClientList = () => {
     const fetchClients = async () => {
         setIsLoading(true);
         try {
-            const params = { page: currentPage, per_page: per_page, search: searchQuery };
+            const params = { page: currentPage, per_page: per_page, searching: searchQuery };
             const response = await APIClients.getAllClients(params);
             setClients(response.data || []);
             setTotalCount(response.pagination.total_count || 0);

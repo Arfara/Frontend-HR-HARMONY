@@ -37,7 +37,7 @@ const GoalType = () => {
   const fetchGoalTypes = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPerformance.viewAllGoalTypes(params);
       setGoalTypes(response.goalTypes || []);
       setTotalCount(response.pagination.total_count || 0);
@@ -144,7 +144,7 @@ const GoalType = () => {
               <span>entries</span>
             </div>
             <div className="search-box">
-              <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
           </div>
           <div className="overflow-x-auto mb-4">

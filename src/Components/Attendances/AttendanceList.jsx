@@ -26,7 +26,7 @@ const AttendanceList = () => {
 
   const fetchData = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIAttendance.getAllAttendances(params);
       setAttendanceData(response.data);
       setTotalCount(response.pagination.total_count || 0);
@@ -59,7 +59,7 @@ const AttendanceList = () => {
             entries
           </label>
           <div className="flex justify-end">
-            <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            <input type="text" className="px-2 py-1 border border-gray-300 rounded-md" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
         </div>
         <div className="overflow-x-auto mb-4">

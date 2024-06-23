@@ -78,7 +78,7 @@ const Employees = () => {
   const fetchEmployees = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIEmployees.getAllEmployees(params);
       setEmployees(response.employees || []);
       setTotalCount(response.pagination.total_count || 0);

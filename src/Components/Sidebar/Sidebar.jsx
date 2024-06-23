@@ -9,7 +9,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
   const [activeParentIndex, setActiveParentIndex] = useState(null);
 
   const showSubnav = (index) => {
-    setActiveParentIndex(index); // Set the currently active parent index
+    setActiveParentIndex(index);
     setSubnav(subnav !== index ? index : false);
   };
 

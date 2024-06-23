@@ -39,7 +39,7 @@ const Department = () => {
     const fetchDepartments = async () => {
       setIsLoading(true);
       try {
-        const params = { page: currentPage, per_page: per_page, search: searchQuery };
+        const params = { page: currentPage, per_page: per_page, searching: searchQuery };
         const response = await APICoreHR.getAllDepartments(params);
         setDepartments(response.departments || []);
         setTotalCount(response.pagination.total_count || 0);

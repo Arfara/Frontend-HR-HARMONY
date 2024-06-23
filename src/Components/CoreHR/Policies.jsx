@@ -36,7 +36,7 @@ const Policies = () => {
   const fetchPolicies = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APICoreHR.getAllPolicies(params);
       setPolicies(response.Policies || []);
       setTotalCount(response.Pagination.total_count || 0);

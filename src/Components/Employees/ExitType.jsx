@@ -34,7 +34,7 @@ const ExitType = () => {
   const fetchExitTypes = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIEmployees.getAllExitTypes(params);
       const formattedData = response.exits.map(exit => ({
         ...exit,

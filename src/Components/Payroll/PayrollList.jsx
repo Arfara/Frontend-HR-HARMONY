@@ -34,7 +34,7 @@ const PayrollList = () => {
 
   const fetchPayrolls = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPayroll.getAllPayrolls(params);
       setPayrolls(response.PayrollInfo || []);
       setTotalCount(response.Pagination.total_count || 0);
