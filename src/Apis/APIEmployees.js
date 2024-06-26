@@ -90,7 +90,7 @@ export const APIEmployees = {
       toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating employee.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
