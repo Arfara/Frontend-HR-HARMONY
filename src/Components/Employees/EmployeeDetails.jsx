@@ -14,14 +14,14 @@ const EmployeeDetails = () => {
   const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-      if (employeeDetails) {
-          setUpdatedData({
-              ...employeeDetails.employee,
-              status: employeeDetails.employee.is_active ? 'Active' : 'Inactive',
-          });
-      }
-      fetchRoles();
-  }, [employeeDetails]);
+    if (employeeDetails) {
+        setUpdatedData({
+            ...employeeDetails.employee,
+            status: employeeDetails.employee.is_active
+        });
+    }
+    fetchRoles();
+}, [employeeDetails]);
 
   const fetchRoles = async () => {
       try {
@@ -42,40 +42,43 @@ const EmployeeDetails = () => {
   };
 
   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setUpdatedData(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target;
+    setUpdatedData(prev => ({
+        ...prev,
+        [name]: name === 'status' ? (value === 'Active') : value
+    }));
+};
 
   const handleSaveBasicInfo = async (e) => {
-      e.preventDefault();
-      const dataToUpdate = {
-          first_name: updatedData.first_name,
-          last_name: updatedData.last_name,
-          is_active: updatedData.is_active === 'Active',
-          contact_number: updatedData.contact_number,
-          gender: updatedData.gender,
-          marital_status: updatedData.marital_status,
-          role_id: parseInt(updatedData.role_id, 10),
-          religion: updatedData.religion,
-          blood_group: updatedData.blood_group,
-          nationality: updatedData.nationality,
-          citizenship: updatedData.citizenship,
-          bpjs_kesehatan: updatedData.bpjs_kesehatan,
-          basic_salary: parseInt(updatedData.basic_salary, 10),
-          address1: updatedData.address1,
-          address2: updatedData.address2,
-          city: updatedData.city,
-          state_province: updatedData.state_province,
-          zip_postal_code: updatedData.zip_postal_code,
-      };
+    e.preventDefault();
+    const dataToUpdate = {
+        first_name: updatedData.first_name,
+        last_name: updatedData.last_name,
+        is_active: updatedData.status,
+        contact_number: updatedData.contact_number,
+        gender: updatedData.gender,
+        marital_status: updatedData.marital_status,
+        role_id: parseInt(updatedData.role_id, 10),
+        religion: updatedData.religion,
+        blood_group: updatedData.blood_group,
+        nationality: updatedData.nationality,
+        citizenship: updatedData.citizenship,
+        bpjs_kesehatan: updatedData.bpjs_kesehatan,
+        basic_salary: parseInt(updatedData.basic_salary, 10),
+        address1: updatedData.address1,
+        address2: updatedData.address2,
+        city: updatedData.city,
+        state_province: updatedData.state_province,
+        zip_postal_code: updatedData.zip_postal_code,
+    };
 
-      try {
-          const response = await APIEmployees.updateEmployee(employeeDetails.employee.id, dataToUpdate);
-          navigate("/employees/staff-list");
-      } catch (error) {
+    try {
+        const response = await APIEmployees.updateEmployee(employeeDetails.employee.id, dataToUpdate);
+        navigate("/employees/staff-list");
+    } catch (error) {
         throw error;
-      }
-  };
+    }
+};
 
 
   const handleSaveBio = async (e) => {
@@ -294,21 +297,21 @@ const EmployeeDetails = () => {
   );
 
   const renderSelectField = (label, name, options, updatedData, handleChange) => (
-      <div className="mb-4 md:col-span-1">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
-          <div className="relative">
-              <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id={name}
-                  name={name}
-                  value={updatedData[name] !== undefined ? updatedData[name] : ''}
-                  onChange={handleChange}
-              >
-                  {options.map(option => <option key={option} value={option}>{option}</option>)}
-              </select>
-          </div>
-      </div>
-  );
+    <div className="mb-4 md:col-span-1">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
+        <div className="relative">
+            <select
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id={name}
+                name={name}
+                value={updatedData[name] !== undefined ? (updatedData[name] ? 'Active' : 'Inactive') : ''}
+                onChange={handleChange}
+            >
+                {options.map(option => <option key={option} value={option}>{option}</option>)}
+            </select>
+        </div>
+    </div>
+);
 
   const renderRoleSelectField = (label, name, roles, updatedData, handleChange) => (
       <div className="mb-4 md:col-span-1">

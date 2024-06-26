@@ -16,7 +16,7 @@ const Header = () => {
 
   const handleLogout = () => {
     AuthService.clearCredentialsFromCookie();
-    navigate('/loginsignup');
+    navigate('/login');
   };
 
   return (
