@@ -9,10 +9,10 @@ export const APITasks = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Task created successfully.");
+      toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Failed to create task.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -37,7 +37,7 @@ export const APITasks = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      return response.data.task;
+      return response.data;
     } catch (error) {
       throw new Error(error);
     }
@@ -50,10 +50,10 @@ export const APITasks = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Task updated successfully.");
+      toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Failed to update task.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -65,9 +65,9 @@ export const APITasks = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Task deleted successfully.");
+      toast.success(response.data.message);
     } catch (error) {
-      toast.error("Failed to delete task.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

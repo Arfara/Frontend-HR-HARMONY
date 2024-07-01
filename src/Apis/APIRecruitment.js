@@ -10,10 +10,10 @@ export const APIRecruitment = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("New job created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Failed to create new job.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -51,10 +51,10 @@ export const APIRecruitment = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("New job updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Failed to update job.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -66,10 +66,10 @@ export const APIRecruitment = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("New job deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Failed to delete job.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

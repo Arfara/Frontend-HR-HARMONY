@@ -17,7 +17,7 @@ export const APIAttendance  = {
       });
       return response;
     } catch (error) {
-      toast.error("Error fetching attendance report.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -29,10 +29,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Attendance data added successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error adding attendance data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -68,10 +68,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Attendance data updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error updating attendance data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -83,10 +83,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Attendance data deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error deleting attendance data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -98,10 +98,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Overtime Request data added successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error adding Overtime Request data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -137,10 +137,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Overtime Request data updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error updating Overtime Request data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -152,10 +152,10 @@ export const APIAttendance  = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Overtime Request data deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error deleting Overtime Request data.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

@@ -26,7 +26,7 @@ const Dashboard = () => {
     return (
       <div className="flex items-center justify-center w-full h-screen bg-gray-100">
         <div className="text-center">
-          <img src={require('../Assets/comp_logo.png')} alt="Loading" className="h-48 w-48 mx-auto animate-bounce" />
+          <img src={require('../Assets/comp_logo.png')} alt="Loading" className="h-48 w-80 mx-auto animate-bounce" />
           <p className="mt-4 text-lg text-gray-700">{loadingMessage}</p>
         </div>
       </div>

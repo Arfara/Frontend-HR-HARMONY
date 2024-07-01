@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import { APICoreHR } from '@/Apis/APICoreHR';
 import Header from '../Header/Header';
 
 const EmployeeDetails = () => {
@@ -12,26 +13,58 @@ const EmployeeDetails = () => {
   const [activeTab, setActiveTab] = useState('Bio');
   const [updatedData, setUpdatedData] = useState({});
   const [roles, setRoles] = useState([]);
+  const [shift, setShift] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [designation, setDesignation] = useState([]);
 
   useEffect(() => {
     if (employeeDetails) {
         setUpdatedData({
             ...employeeDetails.employee,
-            status: employeeDetails.employee.is_active
+            status: employeeDetails.employee.is_active ? 'Active' : 'Inactive'
         });
     }
     fetchRoles();
-}, [employeeDetails]);
+    fetchShift();
+    fetchDepartment();
+    fetchDesignation();
+  }, [employeeDetails]);
 
   const fetchRoles = async () => {
       try {
           const rolesData = await APIEmployees.getRoles();
-          setRoles(rolesData.roles);
+          setRoles(rolesData.roles || []);
       } catch (error) {
         throw error;
       }
   };
 
+  const fetchShift = async () => {
+    try {
+        const shiftData = await APIEmployees.getOfficeShiftsNonPagination();
+        setShift(shiftData.shifts || []);
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  const fetchDepartment = async () => {
+    try {
+        const departmentData = await APICoreHR.getAllDepartmentsNonPagination();
+        setDepartment(departmentData.departments || []);
+    } catch (error) {
+        throw error;
+    }
+  };
+
+  const fetchDesignation = async () => {
+    try {
+        const designationData = await APICoreHR.getAllDesignationsNonPagination();
+        setDesignation(designationData.designations || []);
+    } catch (error) {
+        throw error;
+    }
+  };
 
   const handleMenuClick = (menu) => {
       setSelectedMenu(menu);
@@ -45,20 +78,23 @@ const EmployeeDetails = () => {
     const { name, value } = e.target;
     setUpdatedData(prev => ({
         ...prev,
-        [name]: name === 'status' ? (value === 'Active') : value
+        [name]: value
     }));
-};
+  };
 
   const handleSaveBasicInfo = async (e) => {
     e.preventDefault();
     const dataToUpdate = {
         first_name: updatedData.first_name,
         last_name: updatedData.last_name,
-        is_active: updatedData.status,
+        is_active: updatedData.status === 'Active',
         contact_number: updatedData.contact_number,
         gender: updatedData.gender,
         marital_status: updatedData.marital_status,
         role_id: parseInt(updatedData.role_id, 10),
+        shift_id: parseInt(updatedData.shift_id, 10),
+        department_id: parseInt(updatedData.department_id, 10),
+        designation_id: parseInt(updatedData.designation_id, 10),
         religion: updatedData.religion,
         blood_group: updatedData.blood_group,
         nationality: updatedData.nationality,
@@ -78,8 +114,7 @@ const EmployeeDetails = () => {
     } catch (error) {
         throw error;
     }
-};
-
+  };
 
   const handleSaveBio = async (e) => {
       e.preventDefault();
@@ -91,8 +126,6 @@ const EmployeeDetails = () => {
         throw error;
       }
   };
-
-
 
   const handleSaveSocialProfile = async (e) => {
       e.preventDefault();
@@ -111,7 +144,6 @@ const EmployeeDetails = () => {
       }
   };
 
-
   const handleSaveBankInfo = async (e) => {
       e.preventDefault();
       const dataToUpdate = {
@@ -121,7 +153,6 @@ const EmployeeDetails = () => {
           iban: updatedData.iban,
           swift_code: updatedData.swift_code,
           bank_branch: updatedData.bank_branch,
-
       };
 
       try {
@@ -131,7 +162,6 @@ const EmployeeDetails = () => {
         throw error;
       }
   };
-
 
   const handleSaveEmergencyContact = async (e) => {
       e.preventDefault();
@@ -150,7 +180,6 @@ const EmployeeDetails = () => {
       }
   };
 
-
   const handleSaveAccountInfo = async (e) => {
       e.preventDefault();
       const dataToUpdate = {
@@ -166,7 +195,6 @@ const EmployeeDetails = () => {
       }
   };
 
-
   const handleSavePassword = async (e) => {
     e.preventDefault();
     const dataToUpdate = {
@@ -180,7 +208,6 @@ const EmployeeDetails = () => {
       throw error;
     }
   };
-
 
   const renderChangePasswordTab = (updatedData, handleChange, handleSavePassword) => (
       <div>
@@ -232,6 +259,9 @@ const EmployeeDetails = () => {
                                   {renderSelectField("Gender", "gender", ["Male", "Female"], updatedData, handleChange)}
                                   {renderSelectField("Marital Status", "marital_status", ["Married", "Single"], updatedData, handleChange)}
                                   {renderRoleSelectField("Role", "role_id", roles, updatedData, handleChange)}
+                                  {renderShiftSelectField("Shift", "shift_id", shift, updatedData, handleChange)}
+                                  {renderDepartmentSelectField("Department", "department_id", department, updatedData, handleChange)}
+                                  {renderDesignationSelectField("Designation", "designation_id", designation, updatedData, handleChange)}
                                   {renderSelectField("Religion", "religion", ["Islam", "Katholik", "Protestan", "Konghucu", "Buddha"], updatedData, handleChange)}
                                   {renderSelectField("Blood Group", "blood_group", ["A", "B", "AB", "O"], updatedData, handleChange)}
                                   {renderSelectField("Nationality", "nationality", ["Warga Negara Indonesia", "Warga Negara Asing"], updatedData, handleChange)}
@@ -297,21 +327,21 @@ const EmployeeDetails = () => {
   );
 
   const renderSelectField = (label, name, options, updatedData, handleChange) => (
-    <div className="mb-4 md:col-span-1">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
-        <div className="relative">
-            <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id={name}
-                name={name}
-                value={updatedData[name] !== undefined ? (updatedData[name] ? 'Active' : 'Inactive') : ''}
-                onChange={handleChange}
-            >
-                {options.map(option => <option key={option} value={option}>{option}</option>)}
-            </select>
-        </div>
-    </div>
-);
+      <div className="mb-4 md:col-span-1">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
+          <div className="relative">
+              <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id={name}
+                  name={name}
+                  value={updatedData[name] !== undefined ? updatedData[name] : ''}
+                  onChange={handleChange}
+              >
+                  {options.map(option => <option key={option} value={option}>{option}</option>)}
+              </select>
+          </div>
+      </div>
+  );
 
   const renderRoleSelectField = (label, name, roles, updatedData, handleChange) => (
       <div className="mb-4 md:col-span-1">
@@ -325,6 +355,57 @@ const EmployeeDetails = () => {
                   onChange={handleChange}
               >
                   {roles.map(role => <option key={role.id} value={role.id}>{role.role_name}</option>)}
+              </select>
+          </div>
+      </div>
+  );
+
+  const renderDepartmentSelectField = (label, name, department, updatedData, handleChange) => (
+      <div className="mb-4 md:col-span-1">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
+          <div className="relative">
+              <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-7000 leading-tight focus:outline-none focus:shadow-outline"
+                  id={name}
+                  name={name}
+                  value={updatedData[name] !== undefined ? updatedData[name] : ''}
+                  onChange={handleChange}
+              >
+                  {department.map(department => <option key={department.id} value={department.id}>{department.department_name}</option>)}
+              </select>
+          </div>
+      </div>
+  );
+
+  const renderShiftSelectField = (label, name, shift, updatedData, handleChange) => (
+      <div className="mb-4 md:col-span-1">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
+          <div className="relative">
+              <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-7000 leading-tight focus:outline-none focus:shadow-outline"
+                  id={name}
+                  name={name}
+                  value={updatedData[name] !== undefined ? updatedData[name] : ''}
+                  onChange={handleChange}
+              >
+                  {shift.map(shift => <option key={shift.id} value={shift.id}>{shift.shift_name}</option>)}
+              </select>
+          </div>
+      </div>
+  );
+
+  const renderDesignationSelectField = (label, name, designation, updatedData, handleChange) => (
+      <div className="mb-4 md:col-span-1">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={name}>{label}</label>
+          <div className="relative">
+              <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-7000 leading-tight focus:outline-none focus:shadow-outline"
+                  id={name}
+                  name={name}
+                  value={updatedData[name] !== undefined ? updatedData[name] : ''}
+                  onChange={handleChange}
+              >
+                  {designation.map(designation => <option key={designation.id} value={designation.id}>{designation.designation_name}</option>)}
               </select>
           </div>
       </div>
@@ -448,11 +529,11 @@ const EmployeeDetails = () => {
                   </div>
                 </div>
 
-                  <div className="w-full lg:w-3/4">
-                      <div className="bg-white p-6 rounded shadow max-w-4xl mx-auto">
-                          {renderContent()}
-                      </div>
-                  </div>
+                <div className="w-full lg:w-3/4">
+                    <div className="bg-white p-6 rounded shadow max-w-4xl mx-auto">
+                        {renderContent()}
+                    </div>
+                </div>
               </div>
           </div>
       </div>

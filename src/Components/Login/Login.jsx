@@ -120,6 +120,14 @@ const LoginSignup = () => {
                 Sign In
               </button>
             </div>
+            <div className="text-center mt-4">
+              <a
+                href="https://hr-harmony.my.id/"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Back to Homepage
+              </a>
+            </div>
           </form>
         </div>
       </div>

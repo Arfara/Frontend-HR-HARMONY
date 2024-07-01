@@ -4,7 +4,6 @@ import Header from '../Header/Header';
 import PayrollList from './PayrollList';
 import PayslipHistory from './PayslipHistory';
 import RequestLoan from './RequestLoan';
-import PayrollView from './PayrollView';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { FaHistory ,FaClipboardList } from 'react-icons/fa';
 import { MdRequestPage } from "react-icons/md";
@@ -35,7 +34,6 @@ const PayrollRouter = () => {
               <Route path="payroll-list" element={< PayrollList />} />
               <Route path="payslip-history" element={< PayslipHistory />} />
               <Route path="request-loan" element={< RequestLoan />} />
-              <Route path="payroll-view/:id" element={< PayrollView />} />
           </Routes>
     </div>
     );
