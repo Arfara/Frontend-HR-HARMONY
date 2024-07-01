@@ -10,10 +10,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPI Indicator added successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding KPI Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -38,7 +38,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching KPI Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -50,10 +50,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPI Indicator updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating KPI Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -65,10 +65,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPI Indicator deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting KPI Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -80,10 +80,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPA Indicator created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding KPA Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -95,7 +95,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching all KPA Indicators.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -109,7 +109,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching KPA Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -121,10 +121,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPA Indicator updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating KPA Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -136,10 +136,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("KPA Indicator deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting KPA Indicator.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -151,10 +151,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding goal.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -166,7 +166,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching all goals.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -180,7 +180,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching goal.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -192,10 +192,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating goal.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -207,10 +207,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting goal.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -222,10 +222,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal type added successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding goal type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -259,7 +259,7 @@ export const APIPerformance = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching goal type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -271,10 +271,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal type updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating goal type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -286,10 +286,10 @@ export const APIPerformance = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Goal type deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting goal type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

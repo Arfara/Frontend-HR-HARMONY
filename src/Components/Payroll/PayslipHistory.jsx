@@ -48,10 +48,6 @@ const PayslipHistory = () => {
     fetchPayrollHistory();
   }, [currentPage, per_page, searchQuery]);
 
-  const handleViewDetails = (employeeId) => {
-    navigate(`/payroll/payroll-view/${employeeId}`);
-  };
-
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
@@ -99,11 +95,6 @@ const PayslipHistory = () => {
                         className="hover:bg-gray-100">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
                         {record.full_name_employee}
-                        {visibleDelete === record.id && (
-                          <button className="absolute right-0 top-0 bottom-0 mr-4" onClick={() => handleViewDetails(record.id)}>
-                            <EyeIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
-                          </button>
-                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.basic_salary}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salaryMonth}</td>

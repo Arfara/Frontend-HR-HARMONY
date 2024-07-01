@@ -9,10 +9,10 @@ export const APIHelpdesk = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Helpdesk created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating helpdesk.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -26,7 +26,7 @@ export const APIHelpdesk = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching helpdesks.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -40,7 +40,7 @@ export const APIHelpdesk = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching helpdesk.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -52,10 +52,10 @@ export const APIHelpdesk = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Helpdesk updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating helpdesk.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -67,10 +67,10 @@ export const APIHelpdesk = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Helpdesk deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting helpdesk.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

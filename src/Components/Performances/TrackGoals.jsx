@@ -87,9 +87,9 @@ const TrackGoals = () => {
     setShowAddForm(false);
   };
 
-  const handleViewDetailsClick = (goal) => {
-    navigate(`../goals-details/${goal.id}`);
-};
+  const handleViewDetailsClick = (id) => {
+    navigate(`../goals-details/${id}`);
+  };
 
   const handleDeleteClick = (id) => {
     setSelectedGoalId(id);

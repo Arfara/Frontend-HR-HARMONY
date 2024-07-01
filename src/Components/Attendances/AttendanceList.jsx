@@ -96,9 +96,9 @@ const AttendanceList = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.attendance_date}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.in_time}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.out_time}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.total_work}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.early_leaving}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.late}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.early_leaving}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.total_work}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-5000">
                         <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${data.status === 'Absent' ? 'bg-red-200 text-red-800' : data.status === 'Present' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
                           {data.status}

@@ -30,7 +30,7 @@ const GoalType = () => {
 
   useEffect(() => {
     fetchGoalTypes();
-  }, [currentPage, per_page]);
+  }, [currentPage, per_page, searchQuery]);
 
   const paginatedGoalTypes = getPaginatedData(goalTypes, currentPage, per_page);
 

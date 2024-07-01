@@ -18,7 +18,6 @@ const ClientList = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [contactNumber, setContactNumber] = useState('');
-    const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -57,7 +56,7 @@ const ClientList = () => {
 
     useEffect(() => {
         fetchClients();
-    }, [currentPage, per_page]);
+    }, [currentPage, per_page, searchQuery]);
 
     const handleAddNewClick = () => {
         setShowAddForm(true);
@@ -67,7 +66,6 @@ const ClientList = () => {
         setFirstName('');
         setLastName('');
         setContactNumber('');
-        setGender('');
         setEmail('');
         setPassword('');
         setUsername('');
@@ -99,7 +97,6 @@ const ClientList = () => {
             first_name: firstName,
             last_name: lastName,
             contact_number: contactNumber,
-            gender: gender,
             email: email,
             password: password,
             username: username,
@@ -152,18 +149,6 @@ const ClientList = () => {
                                 Contact Number
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumber" type="number" placeholder="Contact Number" value={contactNumber} onChange={(e) => setContactNumber(e.target.value)}/>
-                            </div>
-                            <div className="mb-4 md:col-span-1">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
-                                Gender
-                                </label>
-                                <div className="relative">
-                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                    <option value="" disabled>Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                                </div>
                             </div>
                             <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -235,7 +220,6 @@ const ClientList = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th className="relative px-6 py-3">
@@ -267,7 +251,6 @@ const ClientList = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.username}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.contact_number}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.gender}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.country}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

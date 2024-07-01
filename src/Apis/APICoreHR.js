@@ -10,10 +10,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Department created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while creating department.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -58,10 +58,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Department updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while updating department.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -73,10 +73,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Department deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while deleting department.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -88,10 +88,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Designation created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while creating designation.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -123,10 +123,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Designation updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while updating designation.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -138,10 +138,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Designation deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while deleting designation.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -153,10 +153,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Policy created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while creating policy.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -192,10 +192,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Policy updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while updating policy.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -207,10 +207,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Policy deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while deleting policy.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -222,10 +222,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Announcement created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while creating announcement.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -261,10 +261,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Announcement updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while updating announcement.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -276,10 +276,10 @@ export const APICoreHR = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Announcement deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error while deleting announcement.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

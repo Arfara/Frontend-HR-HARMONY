@@ -8,7 +8,7 @@ export const APIClients = {
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Failed to create client.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -48,7 +48,7 @@ export const APIClients = {
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Failed to update client.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -59,7 +59,7 @@ export const APIClients = {
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Failed to delete client.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   }

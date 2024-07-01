@@ -9,10 +9,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Trainer created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating trainer.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -24,7 +24,7 @@ export const APITraining = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching trainers.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -58,10 +58,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Trainer updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating trainer.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -73,10 +73,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Trainer deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting trainer.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -88,10 +88,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("TrainingSkill created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating training skill.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -136,10 +136,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("TrainingSkill updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating training skill.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -151,10 +151,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("TrainingSkill deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting training skill.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -166,10 +166,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Training created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating training.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -214,10 +214,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Training updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating training.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -229,10 +229,10 @@ export const APITraining = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Training deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting training.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   }
