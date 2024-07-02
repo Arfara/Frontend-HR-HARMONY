@@ -168,23 +168,6 @@ const ClientList = () => {
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="country" name="country" type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)}/>
                             </div>
-                            <div className="mb-4 md:col-span-2 lg:col-span-2">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
-                                    Profile Picture
-                                </label>
-                                <div className="flex items-center justify-center w-full">
-                                    <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-blue-300 group" >
-                                        <div className="flex flex-col items-center justify-center pt-7">
-                                            <svg className="w-10 h-10 text-blue-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                            <p className="lowercase text-sm text-gray-400 group-hover:text-blue-600 pt-1 tracking-wider">Select a photo</p>
-                                            <input type="file" id="profile_picture" name="profile_picture" className="hidden" disabled />
-                                        </div>
-                                    </label>
-                                </div>
-
-                            </div>
                         </div>
                         <div className="flex justify-end bg-gray-200 px-4 py-3">
                         <button type="button" onClick={handleReset} className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none">Reset</button>
