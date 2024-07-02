@@ -232,13 +232,6 @@ const EmployeesExit = () => {
                 <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-700">Exit Contract</h2>
                 </div>
-                <div className="p-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="attachment" >
-                    Attachment
-                  </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" id="attachment" type="file" accept=".gif,.png,.jpg,.jpeg" onChange={handleFileChange} disabled={true} />
-                  <span className="block text-xs text-gray-500 mt-2">(Upload files only: gif,png,jpg,jpeg)</span>
-                </div>
               </div>
             </div>
           </div>

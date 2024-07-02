@@ -258,7 +258,7 @@ const EmployeeDetails = () => {
                                   {renderFormField("Contact Number", "contact_number", "number", updatedData, handleChange)}
                                   {renderSelectField("Gender", "gender", ["Male", "Female"], updatedData, handleChange)}
                                   {renderSelectField("Marital Status", "marital_status", ["Married", "Single"], updatedData, handleChange)}
-                                  {renderRoleSelectField("Role", "role_id", roles, updatedData, handleChange)}
+                                  {renderRoleSelectField("Position", "role_id", roles, updatedData, handleChange)}
                                   {renderShiftSelectField("Shift", "shift_id", shift, updatedData, handleChange)}
                                   {renderDepartmentSelectField("Department", "department_id", department, updatedData, handleChange)}
                                   {renderDesignationSelectField("Designation", "designation_id", designation, updatedData, handleChange)}

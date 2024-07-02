@@ -342,7 +342,7 @@ const Employees = () => {
                 </div>
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
-                    Role *
+                    Position *
                   </label>
                   <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role">
                     {roles && roles.map((role) => (
@@ -399,12 +399,6 @@ const Employees = () => {
                   <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="payslip_type" type="text" placeholder="Payslip Type"/>
                 </div>
               </div>
-            </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
-                Profile Picture
-              </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" disabled={true}/>
             </div>
           </div>
           <div className="flex justify-end bg-gray-200 px-4 py-3">
