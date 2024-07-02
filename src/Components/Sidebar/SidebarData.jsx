@@ -97,7 +97,7 @@ const SideBarData = [
                 path: "/payroll/payroll-list"
             },
             {
-                title: "Pasyslip History",
+                title: "Payslip History",
                 path: "/payroll/payslip-history"
             },
             {

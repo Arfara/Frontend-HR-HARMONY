@@ -169,7 +169,7 @@ const LandingPage = () => {
       <footer className="footer-section">
           <div className="footer-container">
             <img src={logo} alt="Company Logo" className="company-logo" />
-            <p>© 2023 HR Harmony. All rights reserved.</p>
+            <p>© 2024 HR Harmony. All rights reserved.</p>
           </div>
       </footer>
 
