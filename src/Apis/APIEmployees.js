@@ -27,10 +27,10 @@ export const APIEmployees = {
           'Content-Type': 'multipart/form-data'
         }
       });
-      toast.success("Employees uploaded successfully");
+      toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Error occurred while uploading employees.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -78,7 +78,7 @@ export const APIEmployees = {
       if (error.response) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Error occurred while retrieving employee details.");
+        toast.error(error.response.data.message);
       }
       throw new Error(error);
     }
@@ -90,7 +90,7 @@ export const APIEmployees = {
       toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating employee.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -102,10 +102,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Employee deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting employee.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -120,7 +120,7 @@ export const APIEmployees = {
       toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding role.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -155,7 +155,7 @@ export const APIEmployees = {
       toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating role.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -170,7 +170,7 @@ export const APIEmployees = {
       toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting role.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -183,10 +183,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Shift created successfully");
+      toast.success(response.data.message);
       return response.data;
     } catch (error) {
-      toast.error("Error occurred while adding shift.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -219,10 +219,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Shift updated successfully");
+      toast.success(response.data.message);
       return await response.data;
     } catch (error) {
-      toast.error("Error occurred while updating shift.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -234,10 +234,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Shift deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting shift.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -249,10 +249,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Exit status created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while adding exit type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -284,10 +284,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Exit status updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating exit type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -299,10 +299,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Exit status deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting exit type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -314,13 +314,13 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Employee exit processed successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Error occurred while processing employee exit.");
+        toast.error(error.response.data.message);
       }
       throw new Error(error);
     }
@@ -357,10 +357,10 @@ export const APIEmployees = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Employee exit deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting employee exit.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },

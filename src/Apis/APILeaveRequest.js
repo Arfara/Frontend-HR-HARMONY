@@ -9,10 +9,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request type created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating leave request type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -57,10 +57,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request type updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating leave request type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -72,10 +72,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request type deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting leave request type.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -87,10 +87,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -102,7 +102,7 @@ export const APILeaveRequest = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching leave requests.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -127,10 +127,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -142,10 +142,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   }

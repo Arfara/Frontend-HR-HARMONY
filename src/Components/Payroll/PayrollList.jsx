@@ -34,7 +34,7 @@ const PayrollList = () => {
 
   const fetchPayrolls = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPayroll.getAllPayrolls(params);
       setPayrolls(response.PayrollInfo || []);
       setTotalCount(response.Pagination.total_count || 0);
@@ -87,27 +87,6 @@ const PayrollList = () => {
 
   return (
     <div className="max-w-6xl mx-auto ml-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-5 shadow-md rounded-md mb-5">
-        <div className="flex-grow mr-5 mb-5 md:mb-0">
-          <label htmlFor="employee" className="block text-sm text-gray-800 mb-1">Employee</label>
-          <select id="employee" className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-            {employees.map((employee) => (
-              <option key={employee.id} value={employee.username}>
-                {`${employee.first_name} ${employee.last_name}`}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex-grow mr-5 mb-5 md:mb-0">
-          <label htmlFor="monthSelect" className="block text-sm text-gray-800 mb-1">Select Month</label>
-          <input type="month" id="monthSelect" value={selectedMonth} onChange={handleMonthChange} className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
-        </div>
-        <div>
-          <button type="submit" className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 mt-5">
-            <SearchIcon className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
       <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5">
         <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-700">Payment Info for {selectedMonth}</h2>

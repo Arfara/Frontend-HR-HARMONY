@@ -18,7 +18,6 @@ const ClientList = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [contactNumber, setContactNumber] = useState('');
-    const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
@@ -44,7 +43,7 @@ const ClientList = () => {
     const fetchClients = async () => {
         setIsLoading(true);
         try {
-            const params = { page: currentPage, per_page: per_page, search: searchQuery };
+            const params = { page: currentPage, per_page: per_page, searching: searchQuery };
             const response = await APIClients.getAllClients(params);
             setClients(response.data || []);
             setTotalCount(response.pagination.total_count || 0);
@@ -57,7 +56,7 @@ const ClientList = () => {
 
     useEffect(() => {
         fetchClients();
-    }, [currentPage, per_page]);
+    }, [currentPage, per_page, searchQuery]);
 
     const handleAddNewClick = () => {
         setShowAddForm(true);
@@ -67,7 +66,6 @@ const ClientList = () => {
         setFirstName('');
         setLastName('');
         setContactNumber('');
-        setGender('');
         setEmail('');
         setPassword('');
         setUsername('');
@@ -99,7 +97,6 @@ const ClientList = () => {
             first_name: firstName,
             last_name: lastName,
             contact_number: contactNumber,
-            gender: gender,
             email: email,
             password: password,
             username: username,
@@ -154,18 +151,6 @@ const ClientList = () => {
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumber" type="number" placeholder="Contact Number" value={contactNumber} onChange={(e) => setContactNumber(e.target.value)}/>
                             </div>
                             <div className="mb-4 md:col-span-1">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
-                                Gender
-                                </label>
-                                <div className="relative">
-                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                    <option value="" disabled>Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                                </div>
-                            </div>
-                            <div className="mb-4 md:col-span-1">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                                 Email
                                 </label>
@@ -182,23 +167,6 @@ const ClientList = () => {
                                 Country
                                 </label>
                                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="country" name="country" type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)}/>
-                            </div>
-                            <div className="mb-4 md:col-span-2 lg:col-span-2">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
-                                    Profile Picture
-                                </label>
-                                <div className="flex items-center justify-center w-full">
-                                    <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-blue-300 group" >
-                                        <div className="flex flex-col items-center justify-center pt-7">
-                                            <svg className="w-10 h-10 text-blue-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                            <p className="lowercase text-sm text-gray-400 group-hover:text-blue-600 pt-1 tracking-wider">Select a photo</p>
-                                            <input type="file" id="profile_picture" name="profile_picture" className="hidden" disabled />
-                                        </div>
-                                    </label>
-                                </div>
-
                             </div>
                         </div>
                         <div className="flex justify-end bg-gray-200 px-4 py-3">
@@ -235,7 +203,6 @@ const ClientList = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th className="relative px-6 py-3">
@@ -267,7 +234,6 @@ const ClientList = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.username}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.contact_number}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.gender}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.country}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

@@ -31,10 +31,10 @@ const ProjectDetails = () => {
       try {
         const response = await APIProjects.getProjectById(projectId);
         if (response) {
-          setProjectDetails(response);
-          setProgress(response.project_bar);
-          setStatus(response.status);
-          setPriority(response.priority);
+          setProjectDetails(response.Project || {});
+          setProgress(response.Project.project_bar || 0);
+          setStatus(response.Project.status || 'Not Started');
+          setPriority(response.Project.priority || 'Medium');
         }
       } catch (error) {
 
@@ -50,7 +50,7 @@ const ProjectDetails = () => {
     const fetchDepartments = async () => {
       try {
         const response = await APICoreHR.getAllDepartmentsNonPagination();
-        setDepartments(response.departments);
+        setDepartments(response.departments || []);
       } catch (error) {
 
       }
@@ -59,7 +59,7 @@ const ProjectDetails = () => {
     const fetchEmployees = async () => {
       try {
         const response = await APIEmployees.getAllEmployeesNonPagination();
-        setEmployees(response.data);
+        setEmployees(response.data || []);
       } catch (error) {
 
       }
@@ -73,7 +73,7 @@ const ProjectDetails = () => {
     const fetchClients = async () => {
       try {
         const response = await APIClients.getAllClientsNonPagination();
-        setClients(response.data);
+        setClients(response.data || []);
       } catch (error) {
 
       }

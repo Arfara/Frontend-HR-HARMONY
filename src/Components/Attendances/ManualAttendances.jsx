@@ -51,7 +51,7 @@ const ManualAttendances = () => {
   const fetchAttendances = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIAttendance.getAllAttendances(params);
       setAttendances(response.data || []);
       setTotalCount(response.pagination.total_count || 0);
@@ -181,33 +181,7 @@ const ManualAttendances = () => {
   return (
     <div className="max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
-        <div className="w-full lg:w-1/3 px-3 lg:mb-0">
-          <div className="bg-white rounded-lg shadow-md">
-            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-              <h5 className="text-lg font-semibold text-gray-700">Filter Attendance</h5>
-            </div>
-            <form className="p-4" onSubmit={handleFilterSubmit}>
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
-                <input type="date" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="date" value={filterDate} onChange={(e) => setFilterDate(e.target.value)} />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="employee_id" className="block text-sm font-medium text-gray-700">Employee</label>
-                <select id="employee" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value={filterEmployeeId} onChange={(e) => setFilterEmployeeId(e.target.value)}>
-                  <option value="">Select an employee</option>
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.id}>
-                      {employee.first_name} {employee.last_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 mt-3 mb-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Filter</button>
-            </form>
-          </div>
-        </div>
-
-        <div className="w-full lg:w-2/3 lg:mb-0">
+        <div className="w-full lg:w-full lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
               <h5 className="text-lg font-semibold text-gray-700">View Attendance</h5>

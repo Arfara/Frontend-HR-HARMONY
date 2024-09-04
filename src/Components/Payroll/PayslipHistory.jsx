@@ -31,7 +31,7 @@ const PayslipHistory = () => {
 
   const fetchPayrollHistory = async () => {
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIPayroll.getPayrollHistory(params);
       setPayrollHistory(response.payroll_info_list || []);
       setTotalCount(response.pagination.total_count || 0);
@@ -47,10 +47,6 @@ const PayslipHistory = () => {
   useEffect(() => {
     fetchPayrollHistory();
   }, [currentPage, per_page, searchQuery]);
-
-  const handleViewDetails = (employeeId) => {
-    navigate(`/payroll/payroll-view/${employeeId}`);
-  };
 
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
@@ -99,11 +95,6 @@ const PayslipHistory = () => {
                         className="hover:bg-gray-100">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
                         {record.full_name_employee}
-                        {visibleDelete === record.id && (
-                          <button className="absolute right-0 top-0 bottom-0 mr-4" onClick={() => handleViewDetails(record.id)}>
-                            <EyeIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
-                          </button>
-                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.basic_salary}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salaryMonth}</td>

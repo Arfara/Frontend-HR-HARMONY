@@ -34,7 +34,7 @@ const Position = () => {
   const fetchRoles = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIEmployees.getRoles(params);
       setRoles(response.roles.map(role => ({
         ...role,

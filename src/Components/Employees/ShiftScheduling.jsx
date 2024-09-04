@@ -45,7 +45,7 @@ const ShiftScheduling = () => {
   const fetchShifts = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APIEmployees.getOfficeShifts(params);
       setShifts(response.shifts || []);
       setTotalCount(response.pagination.total_count || 0);

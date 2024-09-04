@@ -37,7 +37,7 @@ const LeaveType = () => {
     const fetchLeaveTypes = async () => {
       setIsLoading(true);
       try {
-        const params = { page: currentPage, per_page: per_page, search: searchQuery };
+        const params = { page: currentPage, per_page: per_page, searching: searchQuery };
         const response = await APILeaveRequest.getAllLeaveRequestTypes(params);
         setLeaveTypes(response.leave_request_types || []);
         setTotalCount(response.pagination.total_count || 0);

@@ -36,7 +36,7 @@ const Policies = () => {
   const fetchPolicies = async () => {
     setIsLoading(true);
     try {
-      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const params = { page: currentPage, per_page: per_page, searching: searchQuery };
       const response = await APICoreHR.getAllPolicies(params);
       setPolicies(response.Policies || []);
       setTotalCount(response.Pagination.total_count || 0);
@@ -128,11 +128,6 @@ const Policies = () => {
               <div className="mb-3">
                 <label htmlFor="designationDescription" className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea name="designationDescription" id="designationDescription" value={policyDescription} onChange={(e) => setPolicyDescription(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Description"></textarea>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="policyAttachment" className="block text-sm font-medium text-gray-700">Attachment *</label>
-                <input type="file" id="policyAttachment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" disabled />
-                <p className="text-xs text-gray-500 mt-1">Upload files only: gif, png, jpg, jpeg</p>
               </div>
               <button type="submit" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
             </form>
@@ -236,11 +231,6 @@ const Policies = () => {
               <div className="mb-3">
                 <label htmlFor="editPolicyDescription" className="block text-sm font-medium text-gray-700">Description *</label>
                 <textarea id="editPolicyDescription" value={currentEdit.description || 'no comment'} onChange={(e) => setCurrentEdit({ ...currentEdit, description: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="policyAttachment" className="block text-sm font-medium text-gray-700">Attachment</label>
-                <input type="file" id="policyAttachment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" disabled />
-                <p className="text-xs text-gray-500 mt-1">Upload files only: gif, png, jpg, jpeg</p>
               </div>
               <div className="flex justify-end mt-4">
                 <button type="button" onClick={() => setIsEditModalOpen(false)} className="bg-gray-600 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-700">Close</button>

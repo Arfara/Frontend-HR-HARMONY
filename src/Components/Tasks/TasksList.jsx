@@ -55,7 +55,7 @@ const TasksList = () => {
   const fetchTaskProject = async () => {
     try {
       const response = await APITasks.getTaskProgress();
-      setTaskStatus(response.task_status);
+      setTaskStatus(response.task_status || {});
   } catch (error) {
   }
 };

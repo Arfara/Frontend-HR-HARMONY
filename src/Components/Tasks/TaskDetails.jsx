@@ -75,7 +75,7 @@ const TaskDetails = () => {
       try {
         const response = await APITasks.getTaskById(taskId);
         if (response) {
-          setTask(response);
+          setTask(response.task || {});
         }
       } catch (error) {
 
